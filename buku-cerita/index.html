@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Ojan dan Sepeda Kecil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@500;700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap">
+<style>
+/* Layout: one picture-book column; every page is a framed illustration over its Indonesian and English text, read top to bottom like a real book */
+:root {
+  --paper: #eef4ea;
+  --page: #ffffff;
+  --ink: #22301f;
+  --muted: #5b6a56;
+  --leaf: #2f7d45;
+  --sun: #f3b52f;
+  --berry: #c8443c;
+  --en: #33597f;
+  --line: #d6e2cf;
+  --display: "Grandstander", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Literata", Georgia, "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #111912; --page: #18231a; --ink: #e7efe2; --muted: #a2b29c;
+    --leaf: #7ccf8c; --sun: #f6c958; --berry: #f08b82; --en: #9cc3ea; --line: #2a3a2c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #111912; --page: #18231a; --ink: #e7efe2; --muted: #a2b29c;
+  --leaf: #7ccf8c; --sun: #f6c958; --berry: #f08b82; --en: #9cc3ea; --line: #2a3a2c;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  padding: 0 16px;
+  padding-block: 0 64px;
+}
+.book { max-width: 880px; margin: 0 auto; display: grid; gap: 56px; }
+
+/* language switch */
+.langbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  display: flex; justify-content: center; padding-block: 12px;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(6px);
+}
+.seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--page); border: 2px solid var(--line); }
+.seg button {
+  font: 700 0.95rem/1 var(--display); color: var(--muted); background: transparent;
+  border: 0; border-radius: 999px; padding: 9px 16px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--leaf); color: var(--page); }
+.seg button:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+
+.book[data-lang="id"] .en, .book[data-lang="id"] .t-en { display: none; }
+.book[data-lang="en"] .id, .book[data-lang="en"] .t-id { display: none; }
+
+/* cover */
+.cover { display: grid; gap: 22px; text-align: center; padding-top: 12px; }
+.age {
+  justify-self: center; font: 700 0.85rem/1 var(--display); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--leaf); border: 2px solid currentColor; border-radius: 999px; padding: 8px 14px;
+}
+.cover h1 {
+  margin: 0; font: 800 clamp(2.3rem, 7vw, 4.2rem)/1.02 var(--display); text-wrap: balance; letter-spacing: -0.01em;
+}
+.cover h1 .en { display: block; font-size: 0.48em; font-weight: 700; color: var(--en); margin-top: 10px; letter-spacing: 0; }
+.cover .lede { margin: 0 auto; max-width: 34em; color: var(--muted); font-style: italic; text-wrap: balance; }
+.cover .lede span { display: block; }
+
+/* illustration frame */
+.art {
+  margin: 0; border-radius: 22px; overflow: hidden; border: 4px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--sun); background: #bfe4f0; max-width: 100%;
+}
+.art svg { display: block; width: 100%; height: auto; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .art svg { filter: brightness(0.92) saturate(0.95); } }
+:root[data-theme="dark"] .art svg { filter: brightness(0.92) saturate(0.95); }
+
+.sfx { font-family: var(--display); font-weight: 800; paint-order: stroke; stroke-linejoin: round; }
+
+/* characters */
+.section-h { margin: 0 0 18px; font: 800 1.7rem/1.15 var(--display); text-wrap: balance; }
+.section-h .en { display: block; font-size: 0.62em; font-weight: 700; color: var(--en); }
+.cast { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.who { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.who .art { border-width: 3px; box-shadow: 5px 5px 0 var(--sun); border-radius: 18px; }
+.who h3 { margin: 4px 0 0; font: 800 1.2rem/1.15 var(--display); }
+.who p { margin: 0; font-size: 0.95rem; line-height: 1.5; }
+.who p.en { color: var(--en); font-style: italic; }
+
+/* story pages */
+.page { display: grid; gap: 22px; }
+.words { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+.book[data-lang="both"] .words { grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); gap: 28px; }
+.words p { margin: 0; text-wrap: pretty; }
+.words .id { font-size: 1.28rem; line-height: 1.6; }
+.words .en { font-size: 1.12rem; line-height: 1.6; color: var(--en); font-style: italic; }
+.book[data-lang="both"] .words .en { border-left: 2px dashed var(--line); padding-left: 22px; }
+.folio {
+  display: flex; align-items: center; gap: 10px; font: 700 0.8rem/1 var(--display);
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+}
+.folio b {
+  display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+  background: var(--leaf); color: var(--page); font-size: 1rem; letter-spacing: 0;
+}
+.s { font-family: var(--display); font-weight: 800; font-style: normal; color: var(--berry); letter-spacing: 0.02em; }
+.q { font-weight: 600; }
+
+/* moral */
+.moral {
+  border: 3px solid var(--ink); border-radius: 22px; background: var(--page);
+  padding: 26px 24px; display: grid; gap: 10px; text-align: center;
+}
+.moral .label { font: 700 0.8rem/1 var(--display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--leaf); }
+.moral p { margin: 0; text-wrap: balance; }
+.moral .id { font: 700 1.45rem/1.35 var(--display); }
+.moral .en { font-size: 1.1rem; font-style: italic; color: var(--en); }
+
+/* values */
+.values { display: grid; gap: 14px; }
+.val {
+  display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 16px; align-items: start;
+  background: var(--page); border: 2px solid var(--line); border-radius: 18px; padding: 18px;
+}
+.val svg { width: 52px; height: 52px; display: block; }
+.val h3 { margin: 0 0 6px; font: 800 1.12rem/1.25 var(--display); }
+.val h3 .en { color: var(--en); font-weight: 700; }
+.val p { margin: 0; }
+.val p.en { color: var(--en); font-style: italic; margin-top: 4px; }
+.say { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+.say span {
+  font: 600 0.92rem/1.3 var(--body); padding: 8px 12px; border-radius: 14px 14px 14px 4px;
+  background: color-mix(in srgb, var(--leaf) 14%, var(--page)); border: 1px solid color-mix(in srgb, var(--leaf) 35%, transparent);
+}
+.say span i { display: block; color: var(--en); font-weight: 400; }
+.book[data-lang="id"] .say span i { display: none; }
+.book[data-lang="en"] .say span b { display: none; }
+
+footer { color: var(--muted); font-size: 0.9rem; text-align: center; border-top: 2px dashed var(--line); padding-top: 22px; }
+footer p { margin: 0; }
+
+@media (max-width: 820px) {
+  .cast { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .book[data-lang="both"] .words { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .book[data-lang="both"] .words .en { border-left: 0; padding-left: 0; border-top: 2px dashed var(--line); padding-top: 12px; }
+  .words .id { font-size: 1.16rem; }
+  .art { box-shadow: 5px 5px 0 var(--sun); border-width: 3px; }
+}
+@media (max-width: 520px) {
+  .cast { grid-template-columns: minmax(0, 1fr); }
+  .who { grid-template-columns: 130px minmax(0, 1fr); gap: 4px 14px; align-items: center; }
+  .who .art { grid-row: span 3; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .wob { animation: wob 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+  @keyframes wob { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fd3ea"/>
+      <stop offset="1" stop-color="#e4f5f1"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="langbar">
+  <div class="seg" role="group" aria-label="Bahasa / Language">
+    <button type="button" id="lang-both" data-lang="both" aria-pressed="true">ID + EN</button>
+    <button type="button" id="lang-id" data-lang="id" aria-pressed="false">Indonesia</button>
+    <button type="button" id="lang-en" data-lang="en" aria-pressed="false">English</button>
+  </div>
+</div>
+
+<main class="book" id="book" data-lang="both">
+
+  <header class="cover">
+    <span class="age"><span class="id">Usia 3–5 tahun</span><span class="en"> · Ages 3–5</span></span>
+    <h1><span class="id">Ojan dan Sepeda Kecil</span><span class="en">Ojan and the Little Bike</span></h1>
+    <p class="lede">
+      <span class="id">Cerita bergambar tentang jatuh, mencoba lagi, dan menjadi teman yang baik.</span>
+      <span class="en">A picture story about falling, trying again, and being a good friend.</span>
+    </p>
+    <figure class="art" data-scene="cover"></figure>
+  </header>
+
+  <section>
+    <h2 class="section-h"><span class="id">Kenalan dengan tokohnya</span><span class="en">Meet the characters</span></h2>
+    <div class="cast">
+      <div class="who">
+        <figure class="art" data-scene="castOjan"></figure>
+        <h3>Ojan</h3>
+        <p class="id">Anak yang sedang belajar naik sepeda. Helm birunya selalu dipakai.</p>
+        <p class="en">A boy learning to ride a bike. He always wears his blue helmet.</p>
+      </div>
+      <div class="who">
+        <figure class="art" data-scene="castVivi"></figure>
+        <h3>Vivi</h3>
+        <p class="id">Anak ceria bertopi kuning. Suka tertawa, dan belajar untuk peduli.</p>
+        <p class="en">A cheerful girl in a yellow hat. She loves to laugh, and learns to care.</p>
+      </div>
+      <div class="who">
+        <figure class="art" data-scene="castDimas"></figure>
+        <h3>Dimas</h3>
+        <p class="id">Teman yang sigap. Kalau ada yang jatuh, ia cepat mencari bantuan.</p>
+        <p class="en">A quick-thinking friend. When someone falls, he runs for help.</p>
+      </div>
+      <div class="who">
+        <figure class="art" data-scene="castGuru"></figure>
+        <h3><span class="id">Bu Guru</span><span class="en"> · The teacher</span></h3>
+        <p class="id">Guru yang sabar dan selalu menenangkan.</p>
+        <p class="en">A patient teacher who always helps everyone feel calm.</p>
+      </div>
+    </div>
+  </section>
+
+  <article class="page" id="hal-1">
+    <div class="folio"><b>1</b><span class="id">Halaman satu</span><span class="en">Page one</span></div>
+    <figure class="art" data-scene="s1"></figure>
+    <div class="words">
+      <p class="id">Ojan belajar naik sepeda roda dua. Kakinya mengayuh. <span class="s">Kayuh, kayuh.</span> Sepedanya bergoyang-goyang. Vivi dan Dimas menonton dari pinggir taman.</p>
+      <p class="en">Ojan was learning to ride a two-wheeled bike. His feet pushed the pedals. <span class="s">Push, push.</span> The bike wobbled and wobbled. Vivi and Dimas watched from the edge of the park.</p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-2">
+    <div class="folio"><b>2</b><span class="id">Halaman dua</span><span class="en">Page two</span></div>
+    <figure class="art" data-scene="s2"></figure>
+    <div class="words">
+      <p class="id"><span class="s">Brak!</span> Ojan jatuh. Lututnya perih. Vivi yang melihat tertawa keras. <span class="q">“Hihihi! Ojan jatuh!”</span> Dimas kaget.</p>
+      <p class="en"><span class="s">Crash!</span> Ojan fell down. His knee stung. Vivi saw it and laughed out loud. <span class="q">“Hee-hee-hee! Ojan fell!”</span> Dimas was startled.</p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-3">
+    <div class="folio"><b>3</b><span class="id">Halaman tiga</span><span class="en">Page three</span></div>
+    <figure class="art" data-scene="s3"></figure>
+    <div class="words">
+      <p class="id"><span class="q">“Jangan ketawa,”</span> kata Ojan. Suaranya bergetar. <span class="q">“Lututku sakit.”</span> Dimas cepat-cepat berlari memanggil Bu Guru.</p>
+      <p class="en"><span class="q">“Please don’t laugh,”</span> said Ojan. His voice was shaky. <span class="q">“My knee hurts.”</span> Dimas ran quickly to get the teacher.</p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-4">
+    <div class="folio"><b>4</b><span class="id">Halaman empat</span><span class="en">Page four</span></div>
+    <figure class="art" data-scene="s4"></figure>
+    <div class="words">
+      <p class="id">Vivi berhenti tertawa. Ia melihat lutut Ojan yang merah. <span class="q">“Maaf, Ojan,”</span> kata Vivi pelan. <span class="q">“Aku kira kamu jatuhnya lucu.”</span></p>
+      <p class="en">Vivi stopped laughing. She saw Ojan’s red knee. <span class="q">“I’m sorry, Ojan,”</span> Vivi said softly. <span class="q">“I thought your fall looked funny.”</span></p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-5">
+    <div class="folio"><b>5</b><span class="id">Halaman lima</span><span class="en">Page five</span></div>
+    <figure class="art" data-scene="s5"></figure>
+    <div class="words">
+      <p class="id">Bu Guru datang bersama Dimas. Bu Guru membersihkan luka Ojan dengan air. <span class="s">Byur, pelan-pelan.</span> <span class="q">“Jatuh itu bagian dari belajar,”</span> kata Bu Guru. <span class="q">“Mau coba lagi hari ini, atau besok?”</span></p>
+      <p class="en">The teacher came with Dimas. She cleaned Ojan’s cut with water. <span class="s">Splish, gently.</span> <span class="q">“Falling is part of learning,”</span> said the teacher. <span class="q">“Do you want to try again today, or tomorrow?”</span></p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-6">
+    <div class="folio"><b>6</b><span class="id">Halaman enam</span><span class="en">Page six</span></div>
+    <figure class="art" data-scene="s6"></figure>
+    <div class="words">
+      <p class="id">Ojan berpikir. Ia melihat sepedanya. Ia melihat jalan taman. <span class="q">“Sekarang,”</span> kata Ojan. <span class="q">“Tapi pelan-pelan.”</span></p>
+      <p class="en">Ojan thought about it. He looked at his bike. He looked at the park path. <span class="q">“Now,”</span> said Ojan. <span class="q">“But slowly.”</span></p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-7">
+    <div class="folio"><b>7</b><span class="id">Halaman tujuh</span><span class="en">Page seven</span></div>
+    <figure class="art" data-scene="s7"></figure>
+    <div class="words">
+      <p class="id">Vivi berdiri di ujung jalan. <span class="q">“Ayo, Ojan! Ke sini!”</span> Ojan mengayuh. Dimas ikut menghitung: <span class="s">satu, dua, tiga</span> kayuhan. Belum jatuh!</p>
+      <p class="en">Vivi stood at the end of the path. <span class="q">“Come on, Ojan! Over here!”</span> Ojan pedaled. Dimas counted along: <span class="s">one, two, three</span> pushes. Still riding!</p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-8">
+    <div class="folio"><b>8</b><span class="id">Halaman delapan</span><span class="en">Page eight</span></div>
+    <figure class="art" data-scene="s8"></figure>
+    <div class="words">
+      <p class="id">Di ujung jalan, Vivi bertepuk tangan. <span class="s">Prok, prok, prok!</span> Kali ini Vivi tidak tertawa. Kali ini Vivi bersorak. <span class="q">“Hore! Ojan bisa!”</span> Dimas juga ikut bersorak.</p>
+      <p class="en">At the end of the path, Vivi clapped her hands. <span class="s">Clap, clap, clap!</span> This time, Vivi did not laugh. This time, Vivi cheered. <span class="q">“Hooray! Ojan did it!”</span> Dimas cheered too.</p>
+    </div>
+  </article>
+
+  <aside class="moral">
+    <span class="label"><span class="id">Pesan moral</span><span class="en"> · Moral of the story</span></span>
+    <p class="id">Kalau teman jatuh, jangan ditertawakan. Bantu dan semangati dia.</p>
+    <p class="en">When a friend falls, don’t laugh. Help them and cheer them on.</p>
+  </aside>
+
+  <section>
+    <h2 class="section-h"><span class="id">Nilai yang termuat dalam cerita</span><span class="en">Values in this story</span></h2>
+    <div class="values">
+      <div class="val">
+        <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="#2f9e5a"/><path d="M15 27 l8 8 l15 -17" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <h3><span class="id">1. Perbuatan terpuji atau baik</span><span class="en"> · Good deeds</span></h3>
+          <p class="id">Menyemangati teman yang sedang belajar, bukan menertawakannya.</p>
+          <p class="en">Cheering on a friend who is learning, instead of laughing at them.</p>
+        </div>
+      </div>
+      <div class="val">
+        <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="#d2463d"/><path d="M17 17 l18 18 M35 17 l-18 18" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/></svg>
+        <div>
+          <h3><span class="id">2. Perbuatan tidak terpuji atau jangan ditiru</span><span class="en"> · Don’t copy this</span></h3>
+          <p class="id">Menertawakan teman yang jatuh atau sedang kesulitan.</p>
+          <p class="en">Laughing at a friend who falls or is having a hard time.</p>
+        </div>
+      </div>
+      <div class="val">
+        <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="#f0b02c"/><path d="M26 38 C14 30 12 22 16 18 C19.5 14.5 24 16 26 20 C28 16 32.5 14.5 36 18 C40 22 38 30 26 38Z" fill="#ffffff"/></svg>
+        <div>
+          <h3><span class="id">3. Hak Asasi Manusia</span><span class="en"> · Human rights</span></h3>
+          <p class="id">Hak setiap orang untuk diperlakukan dengan hormat dan tidak direndahkan.</p>
+          <p class="en">Everyone has the right to be treated with respect and not be put down.</p>
+        </div>
+      </div>
+      <div class="val">
+        <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="#3b7fc4"/><path d="M14 17 h24 a3 3 0 0 1 3 3 v11 a3 3 0 0 1 -3 3 h-13 l-7 6 v-6 h-4 a3 3 0 0 1 -3 -3 v-11 a3 3 0 0 1 3 -3Z" fill="#ffffff"/><circle cx="20" cy="25.5" r="2" fill="#3b7fc4"/><circle cx="26" cy="25.5" r="2" fill="#3b7fc4"/><circle cx="32" cy="25.5" r="2" fill="#3b7fc4"/></svg>
+        <div>
+          <h3><span class="id">4. Ajak Bicara (Orang tua/keluarga/Guru)</span><span class="en"> · Let’s talk (parents, family, teachers)</span></h3>
+          <p class="id">Apa yang bisa kamu katakan kalau temanmu jatuh?</p>
+          <p class="en">What can you say when your friend falls?</p>
+          <div class="say">
+            <span><b>“Kamu tidak apa-apa?”</b><i>“Are you okay?”</i></span>
+            <span><b>“Ayo, aku bantu.”</b><i>“Come on, I’ll help you.”</i></span>
+            <span><b>“Coba lagi, kamu pasti bisa!”</b><i>“Try again, you can do it!”</i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p class="id">Diadaptasi dari cerita “Ojan dan Sepeda Kecil”.</p>
+    <p class="en">Adapted from the story “Ojan dan Sepeda Kecil” (Ojan and the Little Bike).</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  // ---------- illustration palette (each picture carries its own sky, so these stay fixed in both themes)
+  var C = {
+    sun: '#ffd35a', hillFar: '#b2da98', grass: '#82c065', grassD: '#6aad52', path: '#ecd29b', pathE: '#d6b273',
+    trunk: '#8b5d3c', trunkD: '#734a2e', leafA: '#3f8f52', leafB: '#5aaa62', leafC: '#78c26e',
+    ink: '#2b211d', pink: '#ff8f8f', blush: '#ff9d9d', red: '#e2463b', water: '#5fbcec', plaster: '#f6d7a7',
+    mouth: '#8c2f2f', tongue: '#ff7d7d', eye: '#2e1b12',
+    bike: '#2a9d8f', bikeD: '#1f7a6f', bucket: '#f2b632'
+  };
+  var KIDS = {
+    ojan: { skin: '#ffd6bd', skinD: '#f0b596', hair: '#3b2418', shirt: '#e5483d', shirtD: '#c33a31', bottom: '#3f6db3', pack: '#2a66c4', packD: '#1d4e9c', shoe: '#f4f4f4', style: 'helmet' },
+    vivi: { skin: '#ffd9c2', skinD: '#f2b89a', hair: '#4a2a1a', shirt: '#f58fb6', shirtD: '#e2729c', bottom: 'dress', pack: '#8b5cc7', packD: '#6c43a6', shoe: '#f2b632', style: 'hat' },
+    dimas: { skin: '#f9cfae', skinD: '#e8ae88', hair: '#1e1a1d', shirt: '#2f9e6a', shirtD: '#237f54', bottom: '#8a6a45', pack: '#f2b632', packD: '#d39a1c', shoe: '#e5483d', style: 'spiky' }
+  };
+
+  var P = function (a) { return a.map(function (p) { return p.join(','); }).join(' '); };
+  var last = function (a) { return a[a.length - 1]; };
+  function lerp(a, b, t) { return [+(a[0] + (b[0] - a[0]) * t).toFixed(1), +(a[1] + (b[1] - a[1]) * t).toFixed(1)]; }
+  function limb(a, c, w) {
+    return '<polyline points="' + P(a) + '" fill="none" stroke="' + c + '" stroke-width="' + w + '" stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+  function G(x, y, s, flip, rot, inner) {
+    return '<g transform="translate(' + x + ' ' + y + ') rotate(' + (rot || 0) + ') scale(' + (flip ? -s : s) + ' ' + s + ')">' + inner + '</g>';
+  }
+  function line(d, c, w) {
+    return '<path d="' + d + '" fill="none" stroke="' + (c || C.ink) + '" stroke-width="' + (w || 3) + '" stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+  function daisy(x, y, r, center) {
+    var o = '<g transform="translate(' + x + ' ' + y + ')">';
+    for (var i = 0; i < 6; i++) o += '<ellipse cx="0" cy="' + (-r) + '" rx="' + (r * .45) + '" ry="' + (r * .8) + '" fill="#fff" transform="rotate(' + (i * 60) + ')"/>';
+    return o + '<circle r="' + (r * .5) + '" fill="' + (center || '#f6b833') + '"/></g>';
+  }
+
+  // ---------- children (origin = hip, three-quarter view facing right)
+  var KP = {
+    stand: { lb: [[-8, 0], [-9, 28], [-10, 54]], lf: [[8, 0], [9, 28], [10, 54]], ab: [[-14, -50], [-22, -28], [-24, -10]], af: [[18, -50], [26, -28], [28, -10]] },
+    run: { lb: [[-6, 0], [-24, 20], [-40, 34]], lf: [[8, 0], [28, 16], [24, 50]], ab: [[-14, -50], [-32, -38], [-40, -54]], af: [[18, -50], [36, -36], [48, -48]] },
+    ride: { lb: [[0, 0], [28, 22], [2, 62]], lf: [[6, 0], [34, 30], [34, 78]], ab: [[8, -48], [30, -30], [46, -18]], af: [[16, -48], [36, -28], [52, -14]] },
+    sit: { lb: [[-4, 0], [24, 4], [50, 8]], lf: [[6, 0], [28, -24], [52, 2]], ab: [[-14, -48], [-28, -24], [-32, -4]], af: [[18, -48], [18, -28], [14, -14]] },
+    think: { lb: [[-8, 0], [-9, 28], [-10, 54]], lf: [[8, 0], [9, 28], [10, 54]], ab: [[-14, -50], [-22, -28], [-24, -10]], af: [[18, -50], [36, -40], [30, -64]] },
+    point: { lb: [[-8, 0], [-9, 28], [-10, 54]], lf: [[8, 0], [9, 28], [10, 54]], ab: [[-14, -50], [-8, -30], [6, -26]], af: [[18, -50], [40, -56], [62, -62]] },
+    sorry: { lb: [[-8, 0], [-9, 28], [-10, 54]], lf: [[8, 0], [9, 28], [10, 54]], ab: [[-14, -50], [-6, -30], [6, -22]], af: [[18, -50], [20, -30], [9, -22]] },
+    cheer: { lb: [[-8, 0], [-9, 28], [-10, 54]], lf: [[8, 0], [9, 28], [10, 54]], ab: [[-14, -52], [-30, -78], [-34, -104]], af: [[18, -52], [34, -78], [38, -104]] },
+    clap: { lb: [[-8, 0], [-9, 28], [-10, 54]], lf: [[8, 0], [9, 28], [10, 54]], ab: [[-14, -50], [-22, -68], [4, -80]], af: [[18, -50], [32, -66], [10, -80]] },
+    call: { lb: [[-8, 0], [-9, 28], [-10, 54]], lf: [[8, 0], [9, 28], [10, 54]], ab: [[-14, -50], [-22, -28], [-24, -10]], af: [[18, -52], [36, -74], [42, -102]] },
+    cheeks: { lb: [[-8, 0], [-9, 28], [-10, 54]], lf: [[8, 0], [9, 28], [10, 54]], ab: [[-14, -50], [-34, -60], [-24, -84]], af: [[18, -50], [42, -62], [40, -84]] }
+  };
+
+  function eye(cx, cy, look) {
+    var lx = look ? look[0] : 0, ly = look ? look[1] : 0;
+    return '<ellipse cx="' + cx + '" cy="' + cy + '" rx="7.5" ry="10" fill="' + C.eye + '"/>' +
+      '<circle cx="' + (cx + 2.4 + lx) + '" cy="' + (cy - 3.6 + ly) + '" r="3.3" fill="#fff"/>' +
+      '<circle cx="' + (cx - 2 + lx * .5) + '" cy="' + (cy + 3.6 + ly * .5) + '" r="1.5" fill="#fff"/>';
+  }
+  function shut(cx, cy) { return line('M' + (cx - 7) + ' ' + (cy + 2) + ' Q' + cx + ' ' + (cy - 7) + ' ' + (cx + 7) + ' ' + (cy + 2), C.eye, 3.2); }
+  var bigMouth = '<path d="M1 -81 Q14 -58 29 -81 Z" fill="' + C.mouth + '"/><ellipse cx="15" cy="-68" rx="6.5" ry="3.6" fill="' + C.tongue + '"/>' + line('M5 -80 Q15 -77.5 25 -80', '#fff', 2.4);
+
+  function face(k, mood) {
+    var o = '', L = 0, R = 28, Y = -98, hc = k.hair;
+    var browN = line('M-7 -114 Q0 -118 7 -114', hc, 3) + line('M21 -114 Q28 -118 35 -114', hc, 3);
+    var browSad = line('M-7 -112 L7 -117', hc, 3) + line('M21 -117 L35 -112', hc, 3);
+    o += '<ellipse cx="-8" cy="-83" rx="7.5" ry="4.5" fill="' + C.blush + '" opacity=".7"/><ellipse cx="37" cy="-83" rx="7" ry="4.5" fill="' + C.blush + '" opacity=".7"/>';
+    o += line('M12 -88 q3 2.4 6 0', k.skinD, 2.2);
+    if (mood === 'laugh' || mood === 'cheer') {
+      o += shut(L, Y) + shut(R, Y) + browN + bigMouth;
+    } else if (mood === 'joy') {
+      o += eye(L, Y) + eye(R, Y) + browN + bigMouth;
+    } else if (mood === 'focus') {
+      o += eye(L, Y, [1, 0]) + eye(R, Y, [1, 0]) + line('M-7 -113 L7 -111', hc, 3) + line('M21 -111 L35 -113', hc, 3);
+      o += line('M8 -77 L18 -77', C.mouth, 2.8) + '<ellipse cx="20.5" cy="-75" rx="3.6" ry="3.2" fill="' + C.tongue + '"/>';
+    } else if (mood === 'surprise') {
+      o += eye(L, Y) + eye(R, Y) + line('M-7 -119 Q0 -124 7 -119', hc, 3) + line('M21 -119 Q28 -124 35 -119', hc, 3);
+      o += '<ellipse cx="14" cy="-75" rx="5.5" ry="7" fill="' + C.mouth + '"/>';
+    } else if (mood === 'hurt' || mood === 'sad' || mood === 'sorry') {
+      o += eye(L, Y, [0, 2]) + eye(R, Y, [0, 2]) + browSad;
+      if (mood === 'hurt') {
+        o += line('M6 -76 q2.6 -3 5.2 0 q2.6 3 5.2 0 q2.6 -3 5.2 0', C.mouth, 2.6);
+        o += '<path d="M32 -88 q-4.5 6.5 0 9.5 q4.5 -3 0 -9.5Z" fill="' + C.water + '"/>';
+      } else {
+        o += line('M7 -74 Q14 -80 21 -74', C.mouth, 2.8);
+      }
+    } else if (mood === 'think') {
+      o += eye(L, Y, [-1, -2]) + eye(R, Y, [-1, -2]) + line('M-7 -116 Q0 -121 7 -116', hc, 3) + line('M21 -113 L35 -113', hc, 3);
+      o += line('M9 -77 q5 2.4 10 -1', C.mouth, 2.8);
+    } else if (mood === 'call') {
+      o += eye(L, Y) + eye(R, Y) + browN + '<ellipse cx="14" cy="-75" rx="7" ry="8.5" fill="' + C.mouth + '"/><ellipse cx="14" cy="-70.5" rx="4.5" ry="2.6" fill="' + C.tongue + '"/>';
+    } else {
+      o += eye(L, Y) + eye(R, Y) + browN + line('M5 -80 Q14 -71 23 -80', C.mouth, 3);
+    }
+    return o;
+  }
+
+  function hairBack(k) {
+    if (k.style === 'hat') return '<path d="M-48 -118 C-66 -72 -58 -32 -30 -28 C-20 -36 -18 -50 -22 -60 L36 -60 C38 -48 42 -38 52 -42 C64 -66 60 -100 50 -122 Z" fill="' + k.hair + '"/>';
+    return '';
+  }
+  function hairFront(k) {
+    var o = '';
+    if (k.style === 'helmet') {
+      o += '<path d="M-38 -106 Q-30 -96 -20 -106 Q-12 -96 -2 -108 Q6 -98 16 -108 Q24 -100 34 -108 L34 -124 L-38 -124Z" fill="' + k.hair + '"/>';
+      o += '<path d="M-45 -106 A48 48 0 0 1 51 -110 Z" fill="#2f7fd6"/>';
+      o += '<path d="M-45 -106 L51 -110 L51 -103 L-45 -99Z" fill="#2463b0"/>';
+      o += '<path d="M44 -112 Q66 -113 71 -102 L46 -104Z" fill="#2463b0"/>';
+      o += '<rect x="-27" y="-142" width="15" height="7" rx="3.5" fill="#1d4e9c" transform="rotate(-28 -20 -138)"/>';
+      o += '<rect x="-4" y="-150" width="15" height="7" rx="3.5" fill="#1d4e9c"/>';
+      o += '<rect x="20" y="-144" width="15" height="7" rx="3.5" fill="#1d4e9c" transform="rotate(26 27 -140)"/>';
+      o += line('M-30 -130 Q-14 -148 6 -150', '#ffffff', 3.5).replace('stroke-width', 'opacity=".4" stroke-width');
+      o += line('M-38 -100 Q-30 -76 -8 -66', '#1d4e9c', 2.5);
+    } else if (k.style === 'hat') {
+      o += '<path d="M-38 -104 Q-38 -138 6 -140 Q46 -140 48 -106 Q38 -120 28 -112 Q20 -124 8 -114 Q-4 -126 -14 -112 Q-26 -122 -38 -104Z" fill="' + k.hair + '"/>';
+      o += '<ellipse cx="6" cy="-134" rx="70" ry="15" transform="rotate(-5 6 -134)" fill="#f7d24a"/>';
+      o += '<ellipse cx="6" cy="-131" rx="62" ry="9" transform="rotate(-5 6 -131)" fill="#e9bd2e" opacity=".45"/>';
+      o += '<path d="M-30 -138 Q-28 -178 8 -178 Q42 -178 44 -140 Z" fill="#f9dc5c"/>';
+      o += '<path d="M-30 -144 Q8 -152 44 -146 L44 -138 Q8 -144 -30 -137Z" fill="#f2b632"/>';
+      o += daisy(-20, -144, 7);
+    } else {
+      o += '<path d="M-44 -94 L-52 -116 L-38 -116 L-48 -140 L-27 -132 L-26 -158 L-7 -143 L1 -166 L14 -147 L29 -162 L32 -141 L52 -148 L45 -126 L58 -120 L46 -108 Q32 -118 18 -110 Q8 -122 -4 -110 Q-16 -122 -30 -106 Q-36 -102 -44 -94Z" fill="' + k.hair + '"/>';
+      o += line('M-12 -150 L-6 -138 M12 -154 L14 -142', '#4a4248', 2);
+    }
+    return o;
+  }
+
+  function arm(a, k) {
+    return limb(a, k.skin, 11) + limb([a[0], lerp(a[0], a[1], .6)], k.shirt, 17) +
+      '<circle cx="' + last(a)[0] + '" cy="' + last(a)[1] + '" r="7" fill="' + k.skin + '"/>';
+  }
+  function leg(a, k) {
+    var s = limb(a, k.skin, 12);
+    if (k.bottom !== 'dress') s += limb([a[0], lerp(a[0], a[1], .62)], k.bottom, 18);
+    var f = last(a);
+    return s + '<ellipse cx="' + (f[0] + 4) + '" cy="' + (f[1] + 2) + '" rx="10.5" ry="6" fill="' + k.shoe + '" stroke="#00000022" stroke-width="1"/>';
+  }
+
+  function kid(o) {
+    var k = KIDS[o.who], p = KP[o.pose || 'stand'], s = '';
+    s += '<rect x="-42" y="-68" width="28" height="54" rx="11" fill="' + k.pack + '"/><rect x="-40" y="-42" width="22" height="20" rx="6" fill="' + k.packD + '"/>';
+    s += leg(p.lb, k);
+    s += arm(p.ab, k);
+    s += '<rect x="-21" y="-66" width="46" height="62" rx="17" fill="' + k.shirt + '"/>';
+    s += line('M-2 -65 Q6 -57 14 -65', k.shirtD, 3);
+    if (k.bottom !== 'dress') s += '<rect x="-21" y="-14" width="46" height="18" rx="7" fill="' + k.bottom + '"/>';
+    s += leg(p.lf, k);
+    if (k.bottom === 'dress') {
+      s += '<path d="M-22 -38 L26 -38 L40 10 Q2 18 -36 10 Z" fill="' + k.shirt + '"/>';
+      s += daisy(-14, -6, 3.2, '#ffe07a') + daisy(14, -22, 3.2, '#ffe07a') + daisy(26, 2, 3.2, '#ffe07a') + daisy(0, 6, 3.2, '#ffe07a') + daisy(-4, -50, 3.2, '#ffe07a') + daisy(14, -56, 3.2, '#ffe07a');
+    }
+    var kn = p.lf[1];
+    if (o.knee === 'red') {
+      s += '<ellipse cx="' + kn[0] + '" cy="' + kn[1] + '" rx="6.5" ry="5.5" fill="' + C.red + '"/>' +
+        line('M' + (kn[0] - 3) + ' ' + (kn[1] - 1) + ' l6 -2 M' + (kn[0] - 2) + ' ' + (kn[1] + 2) + ' l5 -2', '#ffb3a8', 1.4);
+    } else if (o.knee === 'plaster') {
+      s += '<g transform="translate(' + kn[0] + ' ' + kn[1] + ') rotate(-30)"><rect x="-9" y="-4.5" width="18" height="9" rx="3.5" fill="' + C.plaster + '"/><rect x="-3.5" y="-4.5" width="7" height="9" fill="#ecc690"/></g>';
+    }
+    s += line('M14 -64 Q10 -42 12 -20', k.packD, 6);
+    s += hairBack(k);
+    s += '<circle cx="-37" cy="-98" r="10" fill="' + k.skin + '"/><circle cx="-37" cy="-98" r="5" fill="' + k.skinD + '" opacity=".6"/>';
+    s += '<circle cx="4" cy="-104" r="42" fill="' + k.skin + '"/>';
+    s += hairFront(k);
+    s += face(k, o.mood);
+    s += arm(p.af, k);
+    return G(o.x, o.y, o.s || 1, o.flip, o.rot, s);
+  }
+
+  // ---------- the teacher (origin = hip, facing right)
+  function guru(o) {
+    var T = { hijab: '#2a9d8f', hijabD: '#1f7a6f', top: '#f3a64b', topD: '#d9892f', skirt: '#5d6fc4', skin: '#f6cfae', shoe: '#5b3a29' };
+    var pose = o.pose || 'stand', s = '';
+    var lb = [[-10, 0], [-12, 40], [-14, 78]], lf = [[10, 0], [12, 40], [14, 78]];
+    var ab = [[-22, -90], [-30, -54], [-30, -24]], af = [[26, -90], [34, -54], [34, -24]];
+    if (pose === 'kneel') { lb = [[-8, 0], [-4, 40], [-40, 44]]; lf = [[10, 0], [44, 2], [46, 42]]; af = [[26, -90], [46, -64], [64, -58]]; }
+    if (pose === 'clap') { ab = [[-22, -90], [-26, -66], [4, -84]]; af = [[26, -90], [38, -66], [10, -84]]; }
+    s += limb(lb, T.skirt, 24) + '<ellipse cx="' + (last(lb)[0] + 4) + '" cy="' + (last(lb)[1] + 4) + '" rx="12" ry="6" fill="' + T.shoe + '"/>';
+    s += limb(ab, T.topD, 14) + '<circle cx="' + last(ab)[0] + '" cy="' + last(ab)[1] + '" r="7" fill="' + T.skin + '"/>';
+    s += '<path d="M-26 -98 Q2 -106 30 -98 L36 -2 Q2 6 -32 -2 Z" fill="' + T.top + '"/>';
+    s += limb(lf, T.skirt, 24) + '<ellipse cx="' + (last(lf)[0] + 4) + '" cy="' + (last(lf)[1] + 4) + '" rx="12" ry="6" fill="' + T.shoe + '"/>';
+    s += '<path d="M8 -174 C-34 -174 -42 -124 -36 -100 C-32 -82 -18 -76 8 -76 C36 -76 52 -84 52 -104 C56 -134 48 -174 8 -174Z" fill="' + T.hijab + '"/>';
+    s += '<ellipse cx="14" cy="-126" rx="24" ry="27" fill="' + T.skin + '"/>';
+    s += '<path d="M-34 -104 Q-34 -66 -6 -60 L36 -62 Q52 -70 50 -104 Q38 -90 14 -98 Q-12 -90 -34 -104Z" fill="' + T.hijab + '"/>';
+    s += '<path d="M-14 -150 Q14 -164 42 -146" fill="none" stroke="' + T.hijabD + '" stroke-width="3"/>';
+    s += '<ellipse cx="2" cy="-114" rx="5.5" ry="3.4" fill="' + C.blush + '" opacity=".7"/><ellipse cx="32" cy="-114" rx="5" ry="3.4" fill="' + C.blush + '" opacity=".7"/>';
+    if (o.mood === 'warm') s += shut(6, -128) + shut(26, -128);
+    else s += '<ellipse cx="6" cy="-128" rx="4.5" ry="6" fill="' + C.eye + '"/><ellipse cx="26" cy="-128" rx="4.5" ry="6" fill="' + C.eye + '"/><circle cx="7.5" cy="-130.5" r="1.8" fill="#fff"/><circle cx="27.5" cy="-130.5" r="1.8" fill="#fff"/>';
+    s += '<circle cx="6" cy="-128" r="9" fill="#fff" fill-opacity=".15" stroke="#6b3b2a" stroke-width="2.2"/><circle cx="26" cy="-128" r="9" fill="#fff" fill-opacity=".15" stroke="#6b3b2a" stroke-width="2.2"/>' + line('M15 -128 L17 -128', '#6b3b2a', 2.2);
+    s += line('M14 -118 q2 2 4 0', '#d9a07c', 2) + line('M8 -110 Q16 -103 24 -110', C.mouth, 2.6);
+    s += limb(af, T.top, 14) + '<circle cx="' + last(af)[0] + '" cy="' + last(af)[1] + '" r="7" fill="' + T.skin + '"/>';
+    if (o.bottle) {
+      var h = last(af);
+      s += '<g transform="translate(' + h[0] + ' ' + h[1] + ') rotate(118)"><rect x="-7" y="-28" width="14" height="32" rx="5" fill="#cdeefc" stroke="#3d93c7" stroke-width="2"/><rect x="-7" y="-14" width="14" height="9" fill="#7cc8ee"/><rect x="-4.5" y="-35" width="9" height="8" rx="2" fill="#3d93c7"/></g>';
+    }
+    return G(o.x, o.y, o.s || 1, o.flip, o.rot, s);
+  }
+
+  // ---------- the little bike (origin = ground under the crank)
+  function wheel(cx, cy) {
+    var sp = '';
+    for (var a = 0; a < 6; a++) {
+      var r = a * Math.PI / 3;
+      sp += 'M' + cx + ' ' + cy + ' l' + (Math.cos(r) * 30).toFixed(1) + ' ' + (Math.sin(r) * 30).toFixed(1) + ' ';
+    }
+    return '<circle cx="' + cx + '" cy="' + cy + '" r="33" fill="none" stroke="' + C.ink + '" stroke-width="7"/>' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="28" fill="none" stroke="#b9c3c9" stroke-width="1.5"/>' +
+      line(sp, '#b9c3c9', 1.5) + '<circle cx="' + cx + '" cy="' + cy + '" r="4.5" fill="' + C.bikeD + '"/>';
+  }
+  function sepeda(o) {
+    var s = '';
+    s += wheel(-58, -35) + wheel(58, -35);
+    s += line('M-58 -35 L-4 -38 L-22 -98 M-58 -35 L-20 -90 L36 -92 M-4 -38 L38 -84 M36 -100 L40 -84 L58 -35', C.bike, 7);
+    s += line('M38 -96 L42 -122 L30 -126', C.bikeD, 5) + line('M30 -126 L22 -127', C.ink, 8);
+    s += '<circle cx="36" cy="-124" r="3.5" fill="' + C.bucket + '"/>';
+    s += line('M-24 -98 L-24 -104', C.bikeD, 5) + '<ellipse cx="-24" cy="-106" rx="15" ry="5" fill="' + C.ink + '"/>';
+    s += line('M-4 -38 L12 -30 M-4 -38 L-20 -46', C.bikeD, 4);
+    s += '<rect x="7" y="-31" width="11" height="4" rx="1.5" fill="' + C.ink + '"/><rect x="-25" y="-47" width="11" height="4" rx="1.5" fill="' + C.ink + '"/>';
+    s += '<circle cx="-4" cy="-38" r="7" fill="' + C.bikeD + '"/>';
+    s += '<path d="M-82 -52 Q-58 -76 -36 -56" fill="none" stroke="' + C.bikeD + '" stroke-width="4" stroke-linecap="round"/>';
+    if (o.stand) s += line('M-30 -36 L-40 -2', C.bikeD, 4);
+    return G(o.x, o.y, o.s || 1, o.flip, o.rot, s);
+  }
+  function rider(o) {
+    var inner = sepeda({ x: 0, y: 0 }) + kid({ who: 'ojan', x: -22, y: -112, pose: 'ride', mood: o.mood, knee: o.knee });
+    return G(o.x, o.y, o.s || 1, false, o.rot, inner);
+  }
+
+  // ---------- the park
+  function cloud(x, y, s) {
+    return G(x, y, s, false, 0, '<g fill="#fff" opacity=".92"><ellipse cx="0" cy="0" rx="44" ry="17"/><circle cx="-16" cy="-10" r="18"/><circle cx="12" cy="-14" r="23"/></g>');
+  }
+  function city() {
+    var b = [[30, 60, 70], [100, 40, 110], [150, 54, 84], [220, 36, 130], [600, 44, 100], [654, 60, 74], [724, 38, 120]];
+    return '<g fill="#bcd6e8">' + b.map(function (r) { return '<rect x="' + r[0] + '" y="' + (300 - r[2]) + '" width="' + r[1] + '" height="' + r[2] + '" rx="3"/>'; }).join('') + '</g>';
+  }
+  function house(x, y, s) {
+    return G(x, y, s, false, 0,
+      '<rect x="-50" y="-70" width="100" height="70" fill="#f6e7c8"/><path d="M-62 -66 L0 -112 L62 -66Z" fill="#d9573f"/>' +
+      '<rect x="-36" y="-54" width="26" height="24" fill="#9cc9e6" stroke="#fff" stroke-width="3"/><rect x="12" y="-42" width="22" height="42" fill="#b07a48"/>');
+  }
+  function tree(x, y, s) {
+    return G(x, y, s, false, 0,
+      '<path d="M-12 0 L-8 -90 L8 -90 L12 0Z" fill="' + C.trunk + '"/>' +
+      '<circle cx="-34" cy="-112" r="40" fill="' + C.leafA + '"/><circle cx="30" cy="-114" r="42" fill="' + C.leafB + '"/><circle cx="0" cy="-152" r="48" fill="' + C.leafC + '"/>' +
+      '<circle cx="-16" cy="-168" r="11" fill="#fff" opacity=".14"/>');
+  }
+  function fence(x1, x2, y) {
+    var o = '<rect x="' + x1 + '" y="' + (y - 26) + '" width="' + (x2 - x1) + '" height="6" fill="#efdcbc"/><rect x="' + x1 + '" y="' + (y - 12) + '" width="' + (x2 - x1) + '" height="6" fill="#efdcbc"/>';
+    for (var x = x1; x <= x2 - 12; x += 26) o += '<path d="M' + x + ' ' + y + ' V' + (y - 34) + ' l6 -7 l6 7 V' + y + 'Z" fill="#f7e8cc" stroke="#d1b48a" stroke-width="1.5"/>';
+    return o;
+  }
+  function bush(x, y, s) {
+    return G(x, y, s, false, 0, '<circle cx="-22" cy="-12" r="20" fill="' + C.leafA + '"/><circle cx="18" cy="-12" r="22" fill="' + C.leafA + '"/><circle cx="-2" cy="-24" r="24" fill="' + C.leafB + '"/>' +
+      '<circle cx="-12" cy="-24" r="4" fill="#f79ac0"/><circle cx="10" cy="-30" r="4" fill="#ffd35a"/><circle cx="20" cy="-14" r="4" fill="#f79ac0"/>');
+  }
+  function flowers(list) {
+    return list.map(function (f) {
+      return '<g transform="translate(' + f[0] + ' ' + f[1] + ')">' + line('M0 0 v10', C.grassD, 2) +
+        '<circle cx="-3" cy="-2" r="3.2" fill="' + f[2] + '"/><circle cx="3" cy="-2" r="3.2" fill="' + f[2] + '"/><circle cx="0" cy="-5.5" r="3.2" fill="' + f[2] + '"/><circle cx="0" cy="1" r="3.2" fill="' + f[2] + '"/><circle cx="0" cy="-2" r="2" fill="#ffd35a"/></g>';
+    }).join('');
+  }
+  function butterfly(x, y, s, rot) {
+    return G(x, y, s, false, rot || 0,
+      '<path d="M0 0 C-6 -22 -30 -24 -26 -6 C-24 4 -8 4 0 0Z" fill="#f6a23a" stroke="#2b211d" stroke-width="2"/>' +
+      '<path d="M0 0 C6 -22 30 -24 26 -6 C24 4 8 4 0 0Z" fill="#f6a23a" stroke="#2b211d" stroke-width="2"/>' +
+      '<path d="M0 2 C-4 10 -18 16 -16 6Z M0 2 C4 10 18 16 16 6Z" fill="#ffc95c" stroke="#2b211d" stroke-width="2"/>' +
+      line('M0 -8 L0 8', C.ink, 3) + line('M0 -8 q-4 -8 -8 -10 M0 -8 q4 -8 8 -10', C.ink, 1.5));
+  }
+  function bg(opt) {
+    opt = opt || {};
+    var o = '<rect width="800" height="500" fill="url(#skyG)"/>';
+    var su = opt.sun || [690, 80];
+    o += '<circle cx="' + su[0] + '" cy="' + su[1] + '" r="58" fill="' + C.sun + '" opacity=".28"/><circle cx="' + su[0] + '" cy="' + su[1] + '" r="38" fill="' + C.sun + '"/>';
+    o += cloud(160, 70, 1) + cloud(450, 50, .75);
+    o += city();
+    o += '<path d="M0 296 C120 262 230 270 330 288 C430 262 560 256 660 280 C720 268 770 268 800 274 L800 500 L0 500Z" fill="' + C.hillFar + '"/>';
+    (opt.houses || [[90, 300, .8], [520, 296, .7]]).forEach(function (h) { o += house(h[0], h[1], h[2]); });
+    o += '<path d="M0 316 C180 300 360 312 520 306 C640 300 740 310 800 314 L800 500 L0 500Z" fill="' + C.grass + '"/>';
+    (opt.trees || []).forEach(function (t) { o += tree(t[0], t[1], t[2]); });
+    if (opt.fence !== false) o += fence(opt.fence ? opt.fence[0] : 0, opt.fence ? opt.fence[1] : 800, 372);
+    (opt.bushes || []).forEach(function (b) { o += bush(b[0], b[1], b[2]); });
+    o += '<path d="M0 404 C220 382 520 408 800 388 L800 458 C540 476 240 448 0 472Z" fill="' + C.path + '"/>';
+    o += line('M0 404 C220 382 520 408 800 388', C.pathE, 3) + line('M0 472 C240 448 540 476 800 458', C.pathE, 3);
+    o += '<g fill="' + C.pathE + '"><ellipse cx="120" cy="432" rx="6" ry="3"/><ellipse cx="470" cy="438" rx="5" ry="2.5"/><ellipse cx="660" cy="422" rx="7" ry="3"/><ellipse cx="300" cy="454" rx="4" ry="2"/></g>';
+    o += flowers([[40, 392, '#ffffff'], [72, 396, '#f79ac0'], [250, 388, '#ffffff'], [560, 390, '#f79ac0'], [760, 384, '#ffffff'], [90, 490, '#f79ac0'], [430, 492, '#ffffff'], [720, 488, '#f79ac0'], [600, 494, '#ffd35a']]);
+    if (opt.butterfly) o += butterfly(opt.butterfly[0], opt.butterfly[1], opt.butterfly[2] || .8, 12);
+    return o;
+  }
+  function burst(x, y, r1, r2, n, fill) {
+    var pts = [];
+    for (var i = 0; i < n * 2; i++) {
+      var r = i % 2 ? r2 : r1, a = Math.PI * i / n - Math.PI / 2;
+      pts.push((x + Math.cos(a) * r).toFixed(1) + ',' + (y + Math.sin(a) * r * .78).toFixed(1));
+    }
+    return '<polygon points="' + pts.join(' ') + '" fill="' + fill + '" stroke="' + C.ink + '" stroke-width="3" stroke-linejoin="round"/>';
+  }
+  function sfx(x, y, idText, enText, size, color, rot) {
+    var tr = rot ? ' transform="rotate(' + rot + ' ' + x + ' ' + y + ')"' : '';
+    return '<g' + tr + '><text class="sfx t-id" x="' + x + '" y="' + y + '" text-anchor="middle" font-size="' + size + '" fill="' + color + '" stroke="#fff" stroke-width="6">' + idText + '</text>' +
+      '<text class="sfx t-en" x="' + x + '" y="' + (y + size * .78) + '" text-anchor="middle" font-size="' + Math.round(size * .55) + '" fill="#33597f" stroke="#fff" stroke-width="5">' + enText + '</text></g>';
+  }
+  function dust(x, y, s) {
+    return G(x, y, s, false, 0, '<g fill="#f3e3bf" stroke="#d6b273" stroke-width="2"><circle cx="0" cy="0" r="12"/><circle cx="16" cy="-6" r="9"/><circle cx="-14" cy="-4" r="8"/></g>');
+  }
+  function drops(list) {
+    return list.map(function (d) { return '<path d="M' + d[0] + ' ' + d[1] + ' q-4 6 0 8.5 q4 -2.5 0 -8.5Z" fill="' + C.water + '" stroke="#2f8ac0" stroke-width="1"/>'; }).join('');
+  }
+  function confetti(list) {
+    return list.map(function (l) {
+      return '<rect x="' + (l[0] - 5) + '" y="' + (l[1] - 3) + '" width="10" height="6" rx="2" transform="rotate(' + l[3] + ' ' + l[0] + ' ' + l[1] + ')" fill="' + l[2] + '"/>';
+    }).join('');
+  }
+  var svg = function (body, vb, label) {
+    return '<svg viewBox="' + (vb || '0 0 800 500') + '" role="img" aria-label="' + label + '">' + body + '</svg>';
+  };
+  function portrait(bg1, bg2, inner, label) {
+    return svg('<rect width="240" height="240" fill="' + bg1 + '"/><circle cx="120" cy="120" r="96" fill="' + bg2 + '"/>' + inner, '0 0 240 240', label);
+  }
+
+  // ---------- scenes
+  var scenes = {
+    cover: function () {
+      return svg(bg({ trees: [[740, 340, .8]], butterfly: [560, 170, .9] }) +
+        kid({ who: 'vivi', x: 170, y: 374, s: .98, pose: 'cheer', mood: 'cheer' }) +
+        rider({ x: 410, y: 450, s: 1, mood: 'joy' }) +
+        kid({ who: 'dimas', x: 640, y: 376, s: .98, pose: 'cheer', mood: 'joy', flip: true }) +
+        confetti([[300, 120, '#ef6a4c', 20], [520, 90, '#ffc93c', -30], [250, 200, '#5aaa62', 50], [700, 150, '#5d82d6', -10], [80, 150, '#f79ac0', 70]]),
+        null, 'Ojan naik sepeda, Vivi dan Dimas bersorak');
+    },
+    castOjan: function () { return portrait('#d8e8fb', '#b6d3f6', kid({ who: 'ojan', x: 114, y: 240, s: 1.12, mood: 'joy' }), 'Ojan'); },
+    castVivi: function () { return portrait('#fde3ee', '#f9c4da', kid({ who: 'vivi', x: 114, y: 250, s: 1.04, mood: 'joy' }), 'Vivi'); },
+    castDimas: function () { return portrait('#dcf1e3', '#b7e2c4', kid({ who: 'dimas', x: 114, y: 244, s: 1.1, mood: 'joy' }), 'Dimas'); },
+    castGuru: function () { return portrait('#fdebd3', '#f8d3a3', guru({ x: 108, y: 268, s: 1.08 }), 'Bu Guru'); },
+    s1: function () {
+      return svg(bg({ trees: [[760, 340, .8]], bushes: [[300, 380, .6]] }) +
+        kid({ who: 'vivi', x: 92, y: 352, s: .62, pose: 'stand', mood: 'happy' }) +
+        kid({ who: 'dimas', x: 168, y: 354, s: .6, pose: 'stand', mood: 'happy' }) +
+        '<g class="wob">' + rider({ x: 440, y: 448, s: .98, rot: -4, mood: 'focus' }) + '</g>' +
+        line('M350 382 q-12 -12 0 -26 M336 390 q-18 -18 0 -40', C.ink, 3) +
+        line('M540 382 q12 -12 0 -26 M554 390 q18 -18 0 -40', C.ink, 3) +
+        sfx(630, 200, 'kayuh, kayuh!', 'push, push!', 32, '#e2463b', -6),
+        null, 'Ojan mengayuh sepeda yang bergoyang-goyang, Vivi dan Dimas menonton');
+    },
+    s2: function () {
+      return svg(bg({ bushes: [[60, 380, .7]] }) +
+        burst(190, 226, 90, 56, 11, '#ffd35a') +
+        sfx(190, 224, 'BRAK!', 'CRASH!', 50, '#e2463b', -6) +
+        sepeda({ x: 150, y: 452, s: .9, rot: -24 }) +
+        dust(250, 452, 1) + dust(390, 456, .8) +
+        kid({ who: 'ojan', x: 300, y: 436, s: 1.02, pose: 'sit', mood: 'surprise', knee: 'red' }) +
+        kid({ who: 'dimas', x: 720, y: 372, s: .88, pose: 'cheeks', mood: 'surprise', flip: true }) +
+        kid({ who: 'vivi', x: 580, y: 378, s: .98, pose: 'point', mood: 'laugh', flip: true }) +
+        sfx(520, 140, 'Hihihi!', 'Hee-hee!', 32, '#c8443c', 6),
+        null, 'Ojan jatuh dari sepeda, Vivi tertawa, Dimas kaget');
+    },
+    s3: function () {
+      return svg(bg({ bushes: [[60, 384, .8]] }) +
+        kid({ who: 'vivi', x: 560, y: 360, s: .78, pose: 'point', mood: 'laugh', flip: true }) +
+        sfx(560, 170, 'hihi…', 'hee-hee…', 26, '#c8443c', 6) +
+        kid({ who: 'dimas', x: 720, y: 368, s: .74, pose: 'run', mood: 'focus' }) +
+        line('M660 330 h-30 M664 346 h-40', '#ffffff', 4) +
+        kid({ who: 'ojan', x: 250, y: 440, s: 1.45, pose: 'sit', mood: 'hurt', knee: 'red' }) +
+        line('M330 316 q8 -6 0 -12 q-8 -6 0 -12 M350 322 q10 -8 0 -16 q-10 -8 0 -16', '#33597f', 3),
+        null, 'Ojan memegang lutut yang sakit; Dimas berlari memanggil Bu Guru');
+    },
+    s4: function () {
+      return svg(bg({ trees: [[740, 340, .85]], bushes: [[70, 384, .8]] }) +
+        kid({ who: 'ojan', x: 270, y: 440, s: 1.22, pose: 'sit', mood: 'sad', knee: 'red' }) +
+        kid({ who: 'vivi', x: 520, y: 374, s: 1.08, pose: 'sorry', mood: 'sorry', flip: true }),
+        null, 'Vivi meminta maaf kepada Ojan');
+    },
+    s5: function () {
+      return svg(bg({ bushes: [[740, 384, .8]] }) +
+        kid({ who: 'vivi', x: 120, y: 380, s: .88, pose: 'sorry', mood: 'sorry' }) +
+        kid({ who: 'dimas', x: 650, y: 378, s: .9, pose: 'stand', mood: 'happy', flip: true }) +
+        kid({ who: 'ojan', x: 290, y: 440, s: 1.12, pose: 'sit', mood: 'happy', knee: 'red' }) +
+        guru({ x: 480, y: 394, s: 1.05, pose: 'kneel', mood: 'smile', bottle: true, flip: true }) +
+        drops([[388, 352], [372, 368], [360, 384], [346, 398], [366, 396]]) +
+        sfx(430, 220, 'byur…', 'splish…', 30, '#2f8ac0', 0),
+        null, 'Bu Guru membersihkan luka Ojan dengan air');
+    },
+    s6: function () {
+      var thought = '<g fill="#fff" stroke="' + C.ink + '" stroke-width="3"><circle cx="290" cy="196" r="7"/><circle cx="306" cy="168" r="11"/>' +
+        '<path d="M300 40 C330 8 400 14 410 40 C450 28 500 52 488 86 C512 104 494 146 456 140 C440 166 380 166 366 142 C326 156 292 132 304 104 C276 92 278 50 300 40Z"/></g>' +
+        '<circle cx="356" cy="90" r="24" fill="#ffd35a"/>' +
+        '<g stroke="#f2b632" stroke-width="4" stroke-linecap="round"><path d="M356 52 v-8 M356 128 v8 M318 90 h-8 M394 90 h8 M330 64 l-6 -6 M382 116 l6 6 M382 64 l6 -6 M330 116 l-6 6"/></g>' +
+        '<path d="M452 70 a26 26 0 1 0 18 40 a20 20 0 1 1 -18 -40Z" fill="#5a6fb8"/><circle cx="476" cy="70" r="2.5" fill="#ffd35a"/><circle cx="464" cy="120" r="2" fill="#ffd35a"/>' +
+        '<text class="sfx" x="412" y="100" text-anchor="middle" font-size="30" fill="' + C.ink + '">?</text>';
+      return svg(bg({ bushes: [[60, 384, .7]] }) +
+        guru({ x: 730, y: 348, s: .98, flip: true, mood: 'warm' }) +
+        kid({ who: 'dimas', x: 640, y: 384, s: .78, pose: 'stand', mood: 'happy', flip: true }) +
+        kid({ who: 'vivi', x: 570, y: 386, s: .78, pose: 'stand', mood: 'happy', flip: true }) +
+        sepeda({ x: 430, y: 448, s: .95, stand: true }) +
+        kid({ who: 'ojan', x: 230, y: 372, s: 1.02, pose: 'think', mood: 'think', knee: 'plaster' }) +
+        thought,
+        null, 'Ojan berpikir: coba lagi hari ini atau besok');
+    },
+    s7: function () {
+      var sign = '<g transform="translate(756 404)"><rect x="-5" y="-120" width="10" height="122" fill="#b8875a"/><rect x="-46" y="-122" width="84" height="44" rx="6" fill="#e8c999" stroke="#b8875a" stroke-width="3"/><path d="M-4 -92 C-16 -102 -14 -114 -6 -114 C-2 -114 -1 -110 -0 -108 C1 -110 2 -114 6 -114 C14 -114 16 -102 4 -92 L0 -88Z" fill="#e2463b"/></g>';
+      var nums = [['1', 300, 196], ['2', 380, 168], ['3', 460, 140]].map(function (n) {
+        return '<circle cx="' + n[1] + '" cy="' + n[2] + '" r="24" fill="#fff" stroke="' + C.ink + '" stroke-width="3"/><text class="sfx" x="' + n[1] + '" y="' + (n[2] + 11) + '" text-anchor="middle" font-size="30" fill="#2f7d45">' + n[0] + '</text>';
+      }).join('');
+      return svg(bg({ fence: [0, 520], butterfly: [600, 120, .7] }) +
+        sign +
+        kid({ who: 'dimas', x: 470, y: 354, s: .72, pose: 'run', mood: 'joy' }) +
+        rider({ x: 210, y: 452, s: .92, rot: -2, mood: 'focus', knee: 'plaster' }) +
+        line('M90 400 h-40 M100 420 h-56 M90 440 h-36', '#ffffff', 4) +
+        nums +
+        kid({ who: 'vivi', x: 650, y: 374, s: .98, pose: 'call', mood: 'call', flip: true }) +
+        sfx(640, 150, 'Ayo, Ojan!', 'Come on, Ojan!', 30, '#2f7d45', 0),
+        null, 'Ojan mengayuh, Dimas menghitung, Vivi memanggil dari ujung jalan');
+    },
+    s8: function () {
+      return svg(bg({ butterfly: [300, 110, .8] }) +
+        guru({ x: 100, y: 350, s: .95, pose: 'clap', mood: 'warm' }) +
+        rider({ x: 420, y: 448, s: .98, mood: 'joy', knee: 'plaster' }) +
+        line('M300 400 h-40 M308 420 h-52', '#ffffff', 4) +
+        kid({ who: 'dimas', x: 740, y: 376, s: .9, pose: 'cheer', mood: 'cheer', flip: true }) +
+        kid({ who: 'vivi', x: 630, y: 378, s: 1.02, pose: 'clap', mood: 'cheer', flip: true }) +
+        line('M596 268 l-12 -10 M594 286 l-16 0 M664 268 l12 -10 M666 286 l16 0', C.ink, 3) +
+        confetti([[520, 120, '#ef6a4c', 20], [600, 90, '#ffc93c', -30], [690, 140, '#5aaa62', 50], [760, 210, '#ef6a4c', -10], [470, 200, '#5d82d6', 70], [220, 220, '#ffc93c', 10], [420, 120, '#f79ac0', -50], [180, 90, '#5d82d6', 30]]) +
+        sfx(640, 150, 'Prok, prok!', 'Clap, clap!', 30, '#e2463b', -4) +
+        sfx(470, 66, 'Hore!', 'Hooray!', 42, '#2f7d45', 4),
+        null, 'Vivi bertepuk tangan dan Dimas bersorak saat Ojan berhasil');
+    }
+  };
+
+  document.querySelectorAll('[data-scene]').forEach(function (fig) {
+    var f = scenes[fig.getAttribute('data-scene')];
+    if (f) fig.innerHTML = f();
+  });
+
+  // ---------- language switch
+  var book = document.getElementById('book');
+  var btns = document.querySelectorAll('.seg button');
+  function setLang(l) {
+    book.setAttribute('data-lang', l);
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === l)); });
+    try { localStorage.setItem('ojan-lang', l); } catch (e) {}
+  }
+  btns.forEach(function (b) { b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); }); });
+  try { var saved = localStorage.getItem('ojan-lang'); if (saved) setLang(saved); } catch (e) {}
+})();
+</script>
+
+</html>
