@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Ojan si Kancil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@500;700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap">
+<style>
+/* Layout: one picture-book column; every page is a framed illustration over its Indonesian and English text, read top to bottom like a real book */
+:root {
+  --paper: #eef4ea;
+  --page: #ffffff;
+  --ink: #22301f;
+  --muted: #5b6a56;
+  --leaf: #2f7d45;
+  --sun: #f3b52f;
+  --berry: #c8443c;
+  --en: #33597f;
+  --line: #d6e2cf;
+  --display: "Grandstander", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Literata", Georgia, "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #111912; --page: #18231a; --ink: #e7efe2; --muted: #a2b29c;
+    --leaf: #7ccf8c; --sun: #f6c958; --berry: #f08b82; --en: #9cc3ea; --line: #2a3a2c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #111912; --page: #18231a; --ink: #e7efe2; --muted: #a2b29c;
+  --leaf: #7ccf8c; --sun: #f6c958; --berry: #f08b82; --en: #9cc3ea; --line: #2a3a2c;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  padding: 0 16px;
+  padding-block: 0 64px;
+}
+.book { max-width: 860px; margin: 0 auto; display: grid; gap: 56px; }
+
+/* language switch */
+.langbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  display: flex; justify-content: center; padding-block: 12px;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(6px);
+}
+.seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--page); border: 2px solid var(--line); }
+.seg button {
+  font: 700 0.95rem/1 var(--display); color: var(--muted); background: transparent;
+  border: 0; border-radius: 999px; padding: 9px 16px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--leaf); color: var(--page); }
+.seg button:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+
+.book[data-lang="id"] .en, .book[data-lang="id"] .t-en { display: none; }
+.book[data-lang="en"] .id, .book[data-lang="en"] .t-id { display: none; }
+
+/* cover */
+.cover { display: grid; gap: 22px; text-align: center; padding-top: 12px; }
+.age {
+  justify-self: center; font: 700 0.85rem/1 var(--display); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--leaf); border: 2px solid currentColor; border-radius: 999px; padding: 8px 14px;
+}
+.cover h1 {
+  margin: 0; font: 800 clamp(2.3rem, 7vw, 4.2rem)/1.02 var(--display); text-wrap: balance; letter-spacing: -0.01em;
+}
+.cover h1 .en { display: block; font-size: 0.48em; font-weight: 700; color: var(--en); margin-top: 10px; letter-spacing: 0; }
+.cover .lede { margin: 0 auto; max-width: 34em; color: var(--muted); font-style: italic; text-wrap: balance; }
+.cover .lede span { display: block; }
+
+/* illustration frame */
+.art {
+  margin: 0; border-radius: 22px; overflow: hidden; border: 4px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--sun); background: #bfe4f0; max-width: 100%;
+}
+.art svg { display: block; width: 100%; height: auto; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .art svg { filter: brightness(0.92) saturate(0.95); } }
+:root[data-theme="dark"] .art svg { filter: brightness(0.92) saturate(0.95); }
+
+.sfx { font-family: var(--display); font-weight: 800; paint-order: stroke; stroke-linejoin: round; }
+
+/* characters */
+.section-h { margin: 0 0 18px; font: 800 1.7rem/1.15 var(--display); text-wrap: balance; }
+.section-h .en { display: block; font-size: 0.62em; font-weight: 700; color: var(--en); }
+.cast { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.who { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.who .art { border-width: 3px; box-shadow: 5px 5px 0 var(--sun); border-radius: 18px; }
+.who h3 { margin: 4px 0 0; font: 800 1.2rem/1.15 var(--display); }
+.who p { margin: 0; font-size: 0.95rem; line-height: 1.5; }
+.who p.en { color: var(--en); font-style: italic; }
+
+/* story pages */
+.page { display: grid; gap: 22px; }
+.words { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+.book[data-lang="both"] .words { grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); gap: 28px; }
+.words p { margin: 0; text-wrap: pretty; }
+.words .id { font-size: 1.28rem; line-height: 1.6; }
+.words .en { font-size: 1.12rem; line-height: 1.6; color: var(--en); font-style: italic; }
+.book[data-lang="both"] .words .en { border-left: 2px dashed var(--line); padding-left: 22px; }
+.folio {
+  display: flex; align-items: center; gap: 10px; font: 700 0.8rem/1 var(--display);
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+}
+.folio b {
+  display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+  background: var(--leaf); color: var(--page); font-size: 1rem; letter-spacing: 0;
+}
+.s { font-family: var(--display); font-weight: 800; font-style: normal; color: var(--berry); letter-spacing: 0.02em; }
+.q { font-weight: 600; }
+
+/* moral */
+.moral {
+  border: 3px solid var(--ink); border-radius: 22px; background: var(--page);
+  padding: 26px 24px; display: grid; gap: 10px; text-align: center;
+}
+.moral .label { font: 700 0.8rem/1 var(--display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--leaf); }
+.moral p { margin: 0; text-wrap: balance; }
+.moral .id { font: 700 1.45rem/1.35 var(--display); }
+.moral .en { font-size: 1.1rem; font-style: italic; color: var(--en); }
+
+/* values */
+.values { display: grid; gap: 14px; }
+.val {
+  display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 16px; align-items: start;
+  background: var(--page); border: 2px solid var(--line); border-radius: 18px; padding: 18px;
+}
+.val svg { width: 52px; height: 52px; display: block; }
+.val h3 { margin: 0 0 6px; font: 800 1.12rem/1.25 var(--display); }
+.val h3 .en { color: var(--en); font-weight: 700; }
+.val p { margin: 0; }
+.val p.en { color: var(--en); font-style: italic; margin-top: 4px; }
+.say { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+.say span {
+  font: 600 0.92rem/1.3 var(--body); padding: 8px 12px; border-radius: 14px 14px 14px 4px;
+  background: color-mix(in srgb, var(--leaf) 14%, var(--page)); border: 1px solid color-mix(in srgb, var(--leaf) 35%, transparent);
+}
+.say span i { display: block; color: var(--en); font-weight: 400; }
+.book[data-lang="id"] .say span i { display: none; }
+.book[data-lang="en"] .say span b { display: none; }
+
+footer { color: var(--muted); font-size: 0.9rem; text-align: center; border-top: 2px dashed var(--line); padding-top: 22px; }
+footer p { margin: 0; }
+
+@media (max-width: 720px) {
+  .book[data-lang="both"] .words { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .book[data-lang="both"] .words .en { border-left: 0; padding-left: 0; border-top: 2px dashed var(--line); padding-top: 12px; }
+  .cast { grid-template-columns: minmax(0, 1fr); }
+  .who { grid-template-columns: 140px minmax(0, 1fr); gap: 14px; align-items: center; }
+  .who .art { grid-row: span 3; }
+  .words .id { font-size: 1.16rem; }
+  .art { box-shadow: 5px 5px 0 var(--sun); border-width: 3px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .wob { animation: wob 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+  @keyframes wob { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fd3ea"/>
+      <stop offset="1" stop-color="#e4f5f1"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="langbar">
+  <div class="seg" role="group" aria-label="Bahasa / Language">
+    <button type="button" id="lang-both" data-lang="both" aria-pressed="true">ID + EN</button>
+    <button type="button" id="lang-id" data-lang="id" aria-pressed="false">Indonesia</button>
+    <button type="button" id="lang-en" data-lang="en" aria-pressed="false">English</button>
+  </div>
+</div>
+
+<main class="book" id="book" data-lang="both">
+
+  <header class="cover">
+    <span class="age"><span class="id">Usia 3–5 tahun</span><span class="en"> · Ages 3–5</span></span>
+    <h1><span class="id">Ojan si Kancil dan Sepeda Kecil</span><span class="en">Ojan the Mouse-Deer and the Little Bike</span></h1>
+    <p class="lede">
+      <span class="id">Fabel tentang jatuh, mencoba lagi, dan menjadi teman yang baik.</span>
+      <span class="en">A fable about falling, trying again, and being a good friend.</span>
+    </p>
+    <figure class="art" data-scene="cover"></figure>
+  </header>
+
+  <section>
+    <h2 class="section-h"><span class="id">Kenalan dengan tokohnya</span><span class="en">Meet the characters</span></h2>
+    <div class="cast">
+      <div class="who">
+        <figure class="art" data-scene="castOjan"></figure>
+        <h3>Ojan si Kancil</h3>
+        <p class="id">Kancil kecil yang sedang belajar naik sepeda. Helm merahnya selalu dipakai.</p>
+        <p class="en">A little mouse-deer learning to ride a bike. He always wears his red helmet.</p>
+      </div>
+      <div class="who">
+        <figure class="art" data-scene="castVivi"></figure>
+        <h3>Vivi si Monyet</h3>
+        <p class="id">Monyet lincah yang suka tertawa. Ada pita kuning di kepalanya.</p>
+        <p class="en">A lively monkey who loves to laugh. She wears a yellow bow.</p>
+      </div>
+      <div class="who">
+        <figure class="art" data-scene="castGuru"></figure>
+        <h3><span class="id">Bu Guru Gajah</span><span class="en"> · Teacher Elephant</span></h3>
+        <p class="id">Guru yang sabar dan baik hati. Belalainya bisa menyiramkan air.</p>
+        <p class="en">A patient, kind teacher. Her trunk can pour water.</p>
+      </div>
+    </div>
+  </section>
+
+  <article class="page" id="hal-1">
+    <div class="folio"><b>1</b><span class="id">Halaman satu</span><span class="en">Page one</span></div>
+    <figure class="art" data-scene="s1"></figure>
+    <div class="words">
+      <p class="id">Di tepi hutan, tinggal seekor kancil kecil bernama Ojan. Hari ini Ojan belajar naik sepeda roda dua. Kakinya mengayuh. <span class="s">Kayuh, kayuh.</span> Sepedanya bergoyang-goyang.</p>
+      <p class="en">At the edge of the forest lived a little mouse-deer named Ojan. Today, Ojan was learning to ride a two-wheeled bike. His feet pushed the pedals. <span class="s">Push, push.</span> The bike wobbled and wobbled.</p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-2">
+    <div class="folio"><b>2</b><span class="id">Halaman dua</span><span class="en">Page two</span></div>
+    <figure class="art" data-scene="s2"></figure>
+    <div class="words">
+      <p class="id"><span class="s">Brak!</span> Ojan jatuh. Lututnya perih. Vivi si Monyet melihat dari dahan pohon. Vivi tertawa keras. <span class="q">“Hihihi! Ojan jatuh!”</span></p>
+      <p class="en"><span class="s">Crash!</span> Ojan fell down. His knee stung. Vivi the Monkey was watching from a tree branch. Vivi laughed out loud. <span class="q">“Hee-hee-hee! Ojan fell!”</span></p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-3">
+    <div class="folio"><b>3</b><span class="id">Halaman tiga</span><span class="en">Page three</span></div>
+    <figure class="art" data-scene="s3"></figure>
+    <div class="words">
+      <p class="id"><span class="q">“Jangan ketawa,”</span> kata Ojan. Suaranya bergetar. <span class="q">“Lututku sakit.”</span></p>
+      <p class="en"><span class="q">“Please don’t laugh,”</span> said Ojan. His voice was shaky. <span class="q">“My knee hurts.”</span></p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-4">
+    <div class="folio"><b>4</b><span class="id">Halaman empat</span><span class="en">Page four</span></div>
+    <figure class="art" data-scene="s4"></figure>
+    <div class="words">
+      <p class="id">Vivi berhenti tertawa. Ia turun dari pohon dan melihat lutut Ojan yang merah. <span class="q">“Maaf, Ojan,”</span> kata Vivi pelan. <span class="q">“Aku kira kamu jatuhnya lucu.”</span></p>
+      <p class="en">Vivi stopped laughing. She climbed down from the tree and saw Ojan’s red knee. <span class="q">“I’m sorry, Ojan,”</span> Vivi said softly. <span class="q">“I thought your fall looked funny.”</span></p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-5">
+    <div class="folio"><b>5</b><span class="id">Halaman lima</span><span class="en">Page five</span></div>
+    <figure class="art" data-scene="s5"></figure>
+    <div class="words">
+      <p class="id">Bu Guru Gajah datang membawa ember. Dengan belalainya, Bu Guru membersihkan luka Ojan dengan air. <span class="s">Byur, pelan-pelan.</span> <span class="q">“Jatuh itu bagian dari belajar,”</span> kata Bu Guru. <span class="q">“Mau coba lagi hari ini, atau besok?”</span></p>
+      <p class="en">Teacher Elephant came with a bucket. With her trunk, she cleaned Ojan’s cut with water. <span class="s">Splish, gently.</span> <span class="q">“Falling is part of learning,”</span> said Teacher Elephant. <span class="q">“Do you want to try again today, or tomorrow?”</span></p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-6">
+    <div class="folio"><b>6</b><span class="id">Halaman enam</span><span class="en">Page six</span></div>
+    <figure class="art" data-scene="s6"></figure>
+    <div class="words">
+      <p class="id">Ojan berpikir. Ia melihat sepedanya. Ia melihat jalan setapak. <span class="q">“Sekarang,”</span> kata Ojan. <span class="q">“Tapi pelan-pelan.”</span></p>
+      <p class="en">Ojan thought about it. He looked at his bike. He looked at the path. <span class="q">“Now,”</span> said Ojan. <span class="q">“But slowly.”</span></p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-7">
+    <div class="folio"><b>7</b><span class="id">Halaman tujuh</span><span class="en">Page seven</span></div>
+    <figure class="art" data-scene="s7"></figure>
+    <div class="words">
+      <p class="id">Vivi berdiri di ujung jalan. <span class="q">“Ayo, Ojan! Ke sini!”</span> Ojan mengayuh. <span class="s">Satu, dua, tiga</span> kayuhan. Belum jatuh!</p>
+      <p class="en">Vivi stood at the end of the path. <span class="q">“Come on, Ojan! Over here!”</span> Ojan pedaled. <span class="s">One, two, three</span> pushes. Still riding!</p>
+    </div>
+  </article>
+
+  <article class="page" id="hal-8">
+    <div class="folio"><b>8</b><span class="id">Halaman delapan</span><span class="en">Page eight</span></div>
+    <figure class="art" data-scene="s8"></figure>
+    <div class="words">
+      <p class="id">Di ujung jalan, Vivi bertepuk tangan. <span class="s">Prok, prok, prok!</span> Kali ini Vivi tidak tertawa. Kali ini Vivi bersorak. <span class="q">“Hore! Ojan bisa!”</span></p>
+      <p class="en">At the end of the path, Vivi clapped her hands. <span class="s">Clap, clap, clap!</span> This time, Vivi did not laugh. This time, Vivi cheered. <span class="q">“Hooray! Ojan did it!”</span></p>
+    </div>
+  </article>
+
+  <aside class="moral">
+    <span class="label"><span class="id">Pesan moral</span><span class="en"> · Moral of the story</span></span>
+    <p class="id">Kalau teman jatuh, jangan ditertawakan. Bantu dan semangati dia.</p>
+    <p class="en">When a friend falls, don’t laugh. Help them and cheer them on.</p>
+  </aside>
+
+  <section>
+    <h2 class="section-h"><span class="id">Nilai yang termuat dalam cerita</span><span class="en">Values in this story</span></h2>
+    <div class="values">
+      <div class="val">
+        <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="#2f9e5a"/><path d="M15 27 l8 8 l15 -17" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <h3><span class="id">1. Perbuatan terpuji atau baik</span><span class="en"> · Good deeds</span></h3>
+          <p class="id">Menyemangati teman yang sedang belajar, bukan menertawakannya.</p>
+          <p class="en">Cheering on a friend who is learning, instead of laughing at them.</p>
+        </div>
+      </div>
+      <div class="val">
+        <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="#d2463d"/><path d="M17 17 l18 18 M35 17 l-18 18" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/></svg>
+        <div>
+          <h3><span class="id">2. Perbuatan tidak terpuji atau jangan ditiru</span><span class="en"> · Don’t copy this</span></h3>
+          <p class="id">Menertawakan teman yang jatuh atau sedang kesulitan.</p>
+          <p class="en">Laughing at a friend who falls or is having a hard time.</p>
+        </div>
+      </div>
+      <div class="val">
+        <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="#f0b02c"/><path d="M26 38 C14 30 12 22 16 18 C19.5 14.5 24 16 26 20 C28 16 32.5 14.5 36 18 C40 22 38 30 26 38Z" fill="#ffffff"/></svg>
+        <div>
+          <h3><span class="id">3. Hak Asasi Manusia</span><span class="en"> · Human rights</span></h3>
+          <p class="id">Hak setiap orang untuk diperlakukan dengan hormat dan tidak direndahkan.</p>
+          <p class="en">Everyone has the right to be treated with respect and not be put down.</p>
+        </div>
+      </div>
+      <div class="val">
+        <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="#3b7fc4"/><path d="M14 17 h24 a3 3 0 0 1 3 3 v11 a3 3 0 0 1 -3 3 h-13 l-7 6 v-6 h-4 a3 3 0 0 1 -3 -3 v-11 a3 3 0 0 1 3 -3Z" fill="#ffffff"/><circle cx="20" cy="25.5" r="2" fill="#3b7fc4"/><circle cx="26" cy="25.5" r="2" fill="#3b7fc4"/><circle cx="32" cy="25.5" r="2" fill="#3b7fc4"/></svg>
+        <div>
+          <h3><span class="id">4. Ajak Bicara (Orang tua/keluarga/Guru)</span><span class="en"> · Let’s talk (parents, family, teachers)</span></h3>
+          <p class="id">Apa yang bisa kamu katakan kalau temanmu jatuh?</p>
+          <p class="en">What can you say when your friend falls?</p>
+          <div class="say">
+            <span><b>“Kamu tidak apa-apa?”</b><i>“Are you okay?”</i></span>
+            <span><b>“Ayo, aku bantu.”</b><i>“Come on, I’ll help you.”</i></span>
+            <span><b>“Coba lagi, kamu pasti bisa!”</b><i>“Try again, you can do it!”</i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p class="id">Fabel ini diadaptasi dari cerita “Ojan dan Sepeda Kecil”.</p>
+    <p class="en">This fable is adapted from the story “Ojan dan Sepeda Kecil” (Ojan and the Little Bike).</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  // ---------- illustration palette (each picture carries its own sky, so these stay fixed in both themes)
+  var C = {
+    sun: '#ffd35a', hillFar: '#b2da98', grass: '#82c065', grassD: '#6aad52', path: '#ecd29b', pathE: '#d6b273',
+    trunk: '#8b5d3c', trunkD: '#734a2e', leafA: '#3f8f52', leafB: '#5aaa62', leafC: '#78c26e',
+    k: '#cf8f4f', kD: '#a96d37', cream: '#f7e6cc', hoof: '#4a2f22', pink: '#f2a7a7', ink: '#2b211d',
+    m: '#8c5a38', mD: '#6e4229', face: '#f3d2a6', bow: '#ffc93c',
+    e: '#a6b1be', eD: '#8794a4', earIn: '#efbcc6', dress: '#5d82d6', bucket: '#f2b632',
+    bike: '#2a9d8f', bikeD: '#1f7a6f', helmet: '#ef6a4c', blush: '#f79a9a', red: '#e2463b',
+    water: '#5fbcec', plaster: '#f6d7a7', white: '#ffffff'
+  };
+
+  var P = function (a) { return a.map(function (p) { return p.join(','); }).join(' '); };
+  var last = function (a) { return a[a.length - 1]; };
+  function limb(a, c, w) {
+    return '<polyline points="' + P(a) + '" fill="none" stroke="' + c + '" stroke-width="' + w + '" stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+  function G(x, y, s, flip, rot, inner) {
+    return '<g transform="translate(' + x + ' ' + y + ') rotate(' + (rot || 0) + ') scale(' + (flip ? -s : s) + ' ' + s + ')">' + inner + '</g>';
+  }
+  function eyeOpen(cx, cy, px, py, rx, ry, pr) {
+    rx = rx || 7.5; ry = ry || 9; pr = pr || 5;
+    return '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="#fff"/>' +
+      '<circle cx="' + (cx + px) + '" cy="' + (cy + py) + '" r="' + pr + '" fill="' + C.ink + '"/>' +
+      '<circle cx="' + (cx + px + 1.8) + '" cy="' + (cy + py - 2.2) + '" r="1.7" fill="#fff"/>';
+  }
+  function eyeShut(cx, cy, w) {
+    w = w || 7;
+    return '<path d="M' + (cx - w) + ' ' + (cy + 1) + ' Q' + cx + ' ' + (cy - 8) + ' ' + (cx + w) + ' ' + (cy + 1) + '" fill="none" stroke="' + C.ink + '" stroke-width="3" stroke-linecap="round"/>';
+  }
+  function line(d, c, w) {
+    return '<path d="' + d + '" fill="none" stroke="' + (c || C.ink) + '" stroke-width="' + (w || 3) + '" stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+
+  // ---------- Ojan the mouse-deer (origin = hip, facing right)
+  var KP = {
+    stand: { lb: [[-8, 0], [-10, 30], [-12, 58]], lf: [[8, 0], [10, 30], [12, 58]], ab: [[-4, -46], [-14, -26], [-16, -8]], af: [[10, -46], [18, -26], [20, -8]] },
+    think: { lb: [[-8, 0], [-10, 30], [-12, 58]], lf: [[8, 0], [10, 30], [12, 58]], ab: [[-4, -46], [-14, -26], [-16, -8]], af: [[10, -46], [24, -36], [30, -58]] },
+    ride: { lb: [[0, 0], [28, 22], [2, 62]], lf: [[6, 0], [34, 30], [34, 80]], ab: [[2, -44], [28, -30], [46, -18]], af: [[10, -44], [34, -26], [52, -14]] },
+    sit: { lb: [[-4, 0], [24, 4], [50, 8]], lf: [[6, 0], [28, -24], [52, 2]], ab: [[-4, -44], [-22, -24], [-30, -4]], af: [[10, -44], [14, -28], [16, -12]] }
+  };
+  function kancilFace(mood) {
+    var o = '', ex = 18, ey = -90;
+    if (mood === 'joy') {
+      o += eyeShut(ex, ey);
+      o += '<path d="M29 -71 Q37 -58 46 -71Z" fill="' + C.ink + '"/><ellipse cx="38" cy="-64.5" rx="4" ry="2.4" fill="' + C.pink + '"/>';
+    } else if (mood === 'focus') {
+      o += eyeOpen(ex, ey, 2, 0);
+      o += line('M9 -104 L27 -101');
+      o += line('M32 -69 L41 -69') + '<ellipse cx="43" cy="-67" rx="3.5" ry="3" fill="' + C.pink + '"/>';
+    } else if (mood === 'surprise') {
+      o += '<ellipse cx="18" cy="-91" rx="9" ry="10.5" fill="#fff"/><circle cx="19" cy="-91" r="3.6" fill="' + C.ink + '"/>';
+      o += line('M9 -108 Q18 -113 27 -108');
+      o += '<ellipse cx="38" cy="-67" rx="4.2" ry="5.2" fill="' + C.ink + '"/>';
+    } else if (mood === 'hurt' || mood === 'sad') {
+      o += eyeOpen(ex, ey, 0, 2);
+      o += line('M9 -101 L26 -107');
+      o += line('M30 -67 q3 -3 6 0 q3 3 6 0', C.ink, 2.6);
+      if (mood === 'hurt') o += '<path d="M23 -81 q-4.5 6.5 0 9.5 q4.5 -3 0 -9.5Z" fill="' + C.water + '"/>';
+    } else if (mood === 'think') {
+      o += eyeOpen(ex, ey, 1, -3.2);
+      o += line('M9 -105 L27 -103');
+      o += line('M33 -68 q4 2 8 -1');
+    } else {
+      o += eyeOpen(ex, ey, 1, 1);
+      o += line('M30 -70 Q37 -64 44 -70');
+    }
+    return o;
+  }
+  function kancil(o) {
+    var p = KP[o.pose || 'stand'], s = '';
+    s += '<ellipse cx="-22" cy="-10" rx="8" ry="11" transform="rotate(-35 -22 -10)" fill="' + C.cream + '"/>';
+    s += limb(p.lb, C.kD, 13) + '<ellipse cx="' + last(p.lb)[0] + '" cy="' + (last(p.lb)[1] + 2) + '" rx="6.5" ry="5" fill="' + C.hoof + '"/>';
+    s += limb(p.ab, C.kD, 11) + '<circle cx="' + last(p.ab)[0] + '" cy="' + last(p.ab)[1] + '" r="5" fill="' + C.hoof + '"/>';
+    s += '<ellipse cx="2" cy="-26" rx="23" ry="30" fill="' + C.k + '"/>';
+    s += '<ellipse cx="8" cy="-22" rx="13" ry="21" fill="' + C.cream + '"/>';
+    s += line('M12 -54 l9 3 M11 -47 l9 3', C.cream, 3);
+    s += limb(p.lf, C.k, 13) + '<ellipse cx="' + last(p.lf)[0] + '" cy="' + (last(p.lf)[1] + 2) + '" rx="6.5" ry="5" fill="' + C.hoof + '"/>';
+    var kn = p.lf[1];
+    if (o.knee === 'red') {
+      s += '<ellipse cx="' + kn[0] + '" cy="' + kn[1] + '" rx="6.5" ry="5.5" fill="' + C.red + '"/>' +
+        line('M' + (kn[0] - 3) + ' ' + (kn[1] - 1) + ' l6 -2 M' + (kn[0] - 2) + ' ' + (kn[1] + 2) + ' l5 -2', '#ffb3a8', 1.4);
+    } else if (o.knee === 'plaster') {
+      s += '<g transform="translate(' + kn[0] + ' ' + kn[1] + ') rotate(-30)"><rect x="-9" y="-4.5" width="18" height="9" rx="3.5" fill="' + C.plaster + '"/><rect x="-3.5" y="-4.5" width="7" height="9" fill="#ecc690"/><circle cx="-6" cy="0" r=".9" fill="#c99e66"/><circle cx="6" cy="0" r=".9" fill="#c99e66"/></g>';
+    }
+    // head
+    s += '<ellipse cx="-12" cy="-118" rx="8" ry="20" transform="rotate(-28 -12 -118)" fill="' + C.kD + '"/>';
+    s += '<ellipse cx="6" cy="-86" rx="31" ry="28" fill="' + C.k + '"/>';
+    s += '<ellipse cx="34" cy="-77" rx="17" ry="12.5" fill="' + C.cream + '"/>';
+    s += '<ellipse cx="48" cy="-81" rx="5.5" ry="4.2" fill="' + C.ink + '"/>';
+    s += '<ellipse cx="3" cy="-73" rx="7" ry="4" fill="' + C.blush + '" opacity=".8"/>';
+    if (o.helmet !== false) {
+      s += '<path d="M-27 -91 A33 31 0 0 1 36 -95 Q6 -100 -27 -91Z" fill="' + C.helmet + '"/>';
+      s += '<path d="M30 -97 Q44 -99 47 -92 L31 -92Z" fill="' + C.helmet + '"/>';
+      s += line('M-14 -112 Q4 -122 24 -114', '#ffffff', 4);
+      s += line('M-20 -92 Q-14 -70 -2 -64', C.ink, 2);
+    }
+    s += '<ellipse cx="6" cy="-124" rx="8" ry="21" transform="rotate(14 6 -124)" fill="' + C.k + '"/>';
+    s += '<ellipse cx="6.5" cy="-124" rx="4" ry="13" transform="rotate(14 6 -124)" fill="' + C.pink + '"/>';
+    s += kancilFace(o.mood);
+    s += limb(p.af, C.k, 11) + '<circle cx="' + last(p.af)[0] + '" cy="' + last(p.af)[1] + '" r="5" fill="' + C.hoof + '"/>';
+    return G(o.x, o.y, o.s || 1, o.flip, o.rot, s);
+  }
+
+  // ---------- Vivi the monkey (origin = hip, front-facing)
+  var legsStand = { lb: [[-8, 0], [-10, 28], [-12, 52]], lf: [[8, 0], [10, 28], [12, 52]] };
+  var legsBranch = { lb: [[-8, 0], [-4, 24], [-10, 46]], lf: [[8, 0], [16, 22], [12, 46]] };
+  var MA = {
+    down: { ab: [[-16, -42], [-28, -22], [-32, -4]], af: [[16, -42], [28, -22], [32, -4]] },
+    point: { ab: [[-16, -42], [-12, -22], [4, -16]], af: [[16, -42], [38, -48], [60, -56]] },
+    cheer: { ab: [[-16, -44], [-34, -70], [-40, -98]], af: [[16, -44], [34, -70], [40, -98]] },
+    clap: { ab: [[-16, -42], [-26, -60], [-4, -70]], af: [[16, -42], [26, -60], [4, -70]] },
+    sorry: { ab: [[-16, -42], [-14, -22], [-2, -14]], af: [[16, -42], [14, -22], [2, -14]] },
+    call: { ab: [[-16, -44], [-30, -54], [-20, -70]], af: [[16, -44], [36, -66], [42, -98]] }
+  };
+  function monyetFace(mood) {
+    var o = '';
+    if (mood === 'laugh' || mood === 'cheer') {
+      o += eyeShut(-10, -90, 6) + eyeShut(10, -90, 6);
+      o += '<path d="M-11 -74 Q0 -52 11 -74Z" fill="' + C.ink + '"/><ellipse cx="0" cy="-62" rx="5" ry="3" fill="' + C.pink + '"/>';
+    } else if (mood === 'sorry') {
+      o += eyeOpen(-10, -89, 0, 2.5, 6, 7.5, 4) + eyeOpen(10, -89, 0, 2.5, 6, 7.5, 4);
+      o += line('M-17 -101 L-4 -105', C.mD, 2.6) + line('M4 -105 L17 -101', C.mD, 2.6);
+      o += line('M-6 -66 Q0 -71 6 -66', C.ink, 2.6);
+    } else if (mood === 'call') {
+      o += eyeOpen(-10, -90, 1, 0, 6, 7.5, 4) + eyeOpen(10, -90, 1, 0, 6, 7.5, 4);
+      o += '<ellipse cx="0" cy="-68" rx="6" ry="7" fill="' + C.ink + '"/>';
+    } else {
+      o += eyeOpen(-10, -90, 1, 1, 6, 7.5, 4) + eyeOpen(10, -90, 1, 1, 6, 7.5, 4);
+      o += line('M-8 -70 Q0 -62 8 -70', C.ink, 2.6);
+    }
+    o += '<ellipse cx="-3" cy="-78" rx="1.8" ry="1.4" fill="' + C.ink + '"/><ellipse cx="3" cy="-78" rx="1.8" ry="1.4" fill="' + C.ink + '"/>';
+    return o;
+  }
+  function monyet(o) {
+    var L = o.branch ? legsBranch : legsStand, A = MA[o.pose || 'down'], s = '';
+    s += line('M-14 -8 C-56 -4 -64 -56 -38 -64 C-22 -68 -20 -50 -32 -50', C.m, 8);
+    s += limb(L.lb, C.mD, 11) + '<ellipse cx="' + (last(L.lb)[0] - 2) + '" cy="' + (last(L.lb)[1] + 2) + '" rx="8" ry="5" fill="' + C.face + '"/>';
+    s += limb(L.lf, C.mD, 11) + '<ellipse cx="' + (last(L.lf)[0] + 2) + '" cy="' + (last(L.lf)[1] + 2) + '" rx="8" ry="5" fill="' + C.face + '"/>';
+    s += limb(A.ab, C.m, 10) + '<circle cx="' + last(A.ab)[0] + '" cy="' + last(A.ab)[1] + '" r="6" fill="' + C.face + '"/>';
+    s += '<ellipse cx="0" cy="-24" rx="22" ry="28" fill="' + C.m + '"/>';
+    s += '<ellipse cx="0" cy="-20" rx="14" ry="18" fill="' + C.face + '"/>';
+    s += limb(A.af, C.m, 10) + '<circle cx="' + last(A.af)[0] + '" cy="' + last(A.af)[1] + '" r="6" fill="' + C.face + '"/>';
+    s += '<circle cx="-32" cy="-84" r="12" fill="' + C.m + '"/><circle cx="-32" cy="-84" r="7" fill="' + C.face + '"/>';
+    s += '<circle cx="32" cy="-84" r="12" fill="' + C.m + '"/><circle cx="32" cy="-84" r="7" fill="' + C.face + '"/>';
+    s += '<circle cx="0" cy="-84" r="32" fill="' + C.m + '"/>';
+    s += '<path d="M-6 -114 q5 -13 12 -3 q5 -9 9 1" fill="' + C.m + '"/>';
+    s += '<circle cx="-10" cy="-89" r="13" fill="' + C.face + '"/><circle cx="10" cy="-89" r="13" fill="' + C.face + '"/>';
+    s += '<ellipse cx="0" cy="-72" rx="20" ry="14" fill="' + C.face + '"/>';
+    s += '<ellipse cx="-19" cy="-74" rx="5" ry="3" fill="' + C.blush + '" opacity=".8"/><ellipse cx="19" cy="-74" rx="5" ry="3" fill="' + C.blush + '" opacity=".8"/>';
+    s += '<path d="M18 -112 L6 -122 L8 -104Z M18 -112 L30 -122 L30 -104Z" fill="' + C.bow + '" stroke="#e0a92a" stroke-width="1.5" stroke-linejoin="round"/><circle cx="18" cy="-112" r="4.5" fill="#e0a92a"/>';
+    s += monyetFace(o.mood);
+    return G(o.x, o.y, o.s || 1, o.flip, o.rot, s);
+  }
+
+  // ---------- Teacher Elephant (origin = hip, facing right)
+  function gajah(o) {
+    var s = '';
+    var ab = [[-24, -76], [-38, -46], [-40, -22]], af = [[24, -76], [40, -48], [44, -26]];
+    if (o.pose === 'clap') { ab = [[-24, -76], [-8, -62], [16, -84]]; af = [[24, -76], [34, -58], [20, -86]]; }
+    s += limb([[-16, 0], [-18, 44]], C.eD, 24) + limb([[16, 0], [18, 44]], C.e, 24);
+    s += '<path d="M-26 52 h16 M10 52 h16" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".7"/>';
+    s += limb(ab, C.eD, 18);
+    s += '<path d="M-34 -2 Q-30 -60 -22 -84 L22 -84 Q30 -60 34 -2 Q0 8 -34 -2Z" fill="' + C.dress + '"/>';
+    s += '<path d="M-22 -84 Q0 -66 22 -84Z" fill="#fff"/>';
+    s += '<circle cx="-8" cy="-36" r="3" fill="#fff" opacity=".7"/><circle cx="12" cy="-22" r="3" fill="#fff" opacity=".7"/><circle cx="-16" cy="-12" r="3" fill="#fff" opacity=".7"/><circle cx="18" cy="-50" r="3" fill="#fff" opacity=".7"/>';
+    // ear + head
+    s += '<ellipse cx="-24" cy="-122" rx="30" ry="38" fill="' + C.eD + '"/><ellipse cx="-24" cy="-120" rx="20" ry="27" fill="' + C.earIn + '"/>';
+    s += '<circle cx="8" cy="-126" r="40" fill="' + C.e + '"/>';
+    s += '<g transform="translate(-4 -164)"><circle cx="0" cy="-6" r="5" fill="#fff"/><circle cx="6" cy="0" r="5" fill="#fff"/><circle cx="0" cy="6" r="5" fill="#fff"/><circle cx="-6" cy="0" r="5" fill="#fff"/><circle cx="0" cy="0" r="4" fill="' + C.bucket + '"/></g>';
+    var t = o.trunk;
+    if (t) {
+      s += line('M38 -112 C66 -112 ' + (t[0] - 6) + ' ' + (t[1] - 44) + ' ' + t[0] + ' ' + t[1], C.e, 17);
+      s += '<ellipse cx="' + t[0] + '" cy="' + (t[1] + 4) + '" rx="8" ry="5" fill="' + C.eD + '"/>';
+    } else {
+      s += line('M38 -112 C64 -108 70 -88 66 -76 C63 -68 55 -70 57 -78', C.e, 16);
+    }
+    s += '<ellipse cx="14" cy="-108" rx="7" ry="4" fill="' + C.blush + '" opacity=".8"/>';
+    s += line('M24 -100 Q31 -94 37 -100', C.ink, 2.6);
+    if (o.mood === 'warm') s += eyeShut(24, -132, 6);
+    else s += eyeOpen(24, -132, 1, 1, 6, 7.5, 4);
+    s += '<circle cx="24" cy="-132" r="11.5" fill="#fff" fill-opacity=".18" stroke="' + C.ink + '" stroke-width="2.5"/>' + line('M12.5 -134 L-2 -134', C.ink, 2.5);
+    s += line('M14 -149 Q24 -153 34 -149', C.ink, 2.4);
+    s += limb(af, C.e, 18);
+    if (o.bucket) {
+      var h = last(af);
+      s += '<g transform="translate(' + h[0] + ' ' + h[1] + ')">' + line('M-14 6 Q0 -12 14 6', '#8a6a1c', 2.5) +
+        '<path d="M-16 6 L16 6 L12 34 L-12 34Z" fill="' + C.bucket + '"/><ellipse cx="0" cy="6" rx="16" ry="4" fill="' + C.water + '"/>' +
+        line('M-13 14 h26', '#d99a1c', 2) + '</g>';
+    }
+    s += '<circle cx="' + last(af)[0] + '" cy="' + last(af)[1] + '" r="8" fill="' + C.e + '"/>';
+    return G(o.x, o.y, o.s || 1, o.flip, o.rot, s);
+  }
+
+  // ---------- the little bike (origin = ground under the crank)
+  function wheel(cx, cy) {
+    var sp = '';
+    for (var a = 0; a < 6; a++) {
+      var r = a * Math.PI / 3;
+      sp += 'M' + cx + ' ' + cy + ' l' + (Math.cos(r) * 30).toFixed(1) + ' ' + (Math.sin(r) * 30).toFixed(1) + ' ';
+    }
+    return '<circle cx="' + cx + '" cy="' + cy + '" r="33" fill="none" stroke="' + C.ink + '" stroke-width="7"/>' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="28" fill="none" stroke="#b9c3c9" stroke-width="1.5"/>' +
+      line(sp, '#b9c3c9', 1.5) + '<circle cx="' + cx + '" cy="' + cy + '" r="4.5" fill="' + C.bikeD + '"/>';
+  }
+  function sepeda(o) {
+    var s = '';
+    s += wheel(-58, -35) + wheel(58, -35);
+    s += line('M-58 -35 L-4 -38 L-22 -98 M-58 -35 L-20 -90 L36 -92 M-4 -38 L38 -84 M36 -100 L40 -84 L58 -35', C.bike, 7);
+    s += line('M38 -96 L42 -122 L30 -126', C.bikeD, 5) + line('M30 -126 L22 -127', C.ink, 8);
+    s += '<circle cx="36" cy="-124" r="3.5" fill="' + C.bucket + '"/>';
+    s += line('M-24 -98 L-24 -104', C.bikeD, 5) + '<ellipse cx="-24" cy="-106" rx="15" ry="5" fill="' + C.ink + '"/>';
+    s += line('M-4 -38 L12 -30 M-4 -38 L-20 -46', C.bikeD, 4);
+    s += '<rect x="7" y="-31" width="11" height="4" rx="1.5" fill="' + C.ink + '"/><rect x="-25" y="-47" width="11" height="4" rx="1.5" fill="' + C.ink + '"/>';
+    s += '<circle cx="-4" cy="-38" r="7" fill="' + C.bikeD + '"/>';
+    s += '<path d="M-82 -52 Q-58 -76 -36 -56" fill="none" stroke="' + C.bikeD + '" stroke-width="4" stroke-linecap="round"/>';
+    if (o.stand) s += line('M-30 -36 L-40 -2', C.bikeD, 4);
+    return G(o.x, o.y, o.s || 1, o.flip, o.rot, s);
+  }
+  function rider(o) {
+    var inner = sepeda({ x: 0, y: 0 }) + kancil({ x: -22, y: -112, pose: 'ride', mood: o.mood, knee: o.knee });
+    return G(o.x, o.y, o.s || 1, false, o.rot, inner);
+  }
+
+  // ---------- scenery
+  function cloud(x, y, s) {
+    return G(x, y, s, false, 0, '<g fill="#fff" opacity=".92"><ellipse cx="0" cy="0" rx="44" ry="17"/><circle cx="-16" cy="-10" r="18"/><circle cx="12" cy="-14" r="23"/></g>');
+  }
+  function tree(x, y, s, branch) {
+    var t = '<path d="M-13 0 L-8 -96 L8 -96 L13 0Z" fill="' + C.trunk + '"/>';
+    if (branch) {
+      t += line('M0 -100 Q-80 -108 -150 -110', C.trunk, 15);
+      t += '<circle cx="-160" cy="-120" r="20" fill="' + C.leafA + '"/><circle cx="-142" cy="-128" r="16" fill="' + C.leafB + '"/>';
+    }
+    t += '<circle cx="-36" cy="-118" r="42" fill="' + C.leafA + '"/><circle cx="32" cy="-120" r="44" fill="' + C.leafB + '"/><circle cx="0" cy="-160" r="50" fill="' + C.leafC + '"/>';
+    t += '<circle cx="-18" cy="-176" r="11" fill="#fff" opacity=".14"/><circle cx="22" cy="-140" r="5" fill="#e2463b"/><circle cx="-30" cy="-132" r="5" fill="#e2463b"/>';
+    return G(x, y, s, false, 0, t);
+  }
+  function bush(x, y, s) {
+    return G(x, y, s, false, 0, '<circle cx="-22" cy="-12" r="20" fill="' + C.leafA + '"/><circle cx="18" cy="-12" r="22" fill="' + C.leafA + '"/><circle cx="-2" cy="-24" r="24" fill="' + C.leafB + '"/>');
+  }
+  function flowers(list) {
+    return list.map(function (f) {
+      return '<g transform="translate(' + f[0] + ' ' + f[1] + ')">' + line('M0 0 v10', C.grassD, 2) +
+        '<circle cx="-3" cy="-2" r="3.2" fill="' + f[2] + '"/><circle cx="3" cy="-2" r="3.2" fill="' + f[2] + '"/><circle cx="0" cy="-5.5" r="3.2" fill="' + f[2] + '"/><circle cx="0" cy="1" r="3.2" fill="' + f[2] + '"/><circle cx="0" cy="-2" r="2" fill="#ffd35a"/></g>';
+    }).join('');
+  }
+  function bg(opt) {
+    opt = opt || {};
+    var o = '<rect width="800" height="500" fill="url(#skyG)"/>';
+    var su = opt.sun || [690, 86];
+    o += '<circle cx="' + su[0] + '" cy="' + su[1] + '" r="60" fill="' + C.sun + '" opacity=".28"/><circle cx="' + su[0] + '" cy="' + su[1] + '" r="40" fill="' + C.sun + '"/>';
+    o += cloud(160, 78, 1) + cloud(450, 56, .75);
+    o += '<path d="M0 288 C120 232 230 250 330 280 C430 240 560 232 660 268 C720 250 770 250 800 262 L800 500 L0 500Z" fill="' + C.hillFar + '"/>';
+    o += '<path d="M0 330 C180 302 360 322 520 312 C640 306 740 318 800 324 L800 500 L0 500Z" fill="' + C.grass + '"/>';
+    (opt.trees || []).forEach(function (t) { o += tree(t[0], t[1], t[2], t[3]); });
+    (opt.bushes || []).forEach(function (b) { o += bush(b[0], b[1], b[2]); });
+    o += '<path d="M0 404 C220 380 520 408 800 386 L800 458 C540 476 240 448 0 472Z" fill="' + C.path + '"/>';
+    o += line('M0 404 C220 380 520 408 800 386', C.pathE, 3) + line('M0 472 C240 448 540 476 800 458', C.pathE, 3);
+    o += '<g fill="' + C.pathE + '"><ellipse cx="120" cy="430" rx="6" ry="3"/><ellipse cx="470" cy="436" rx="5" ry="2.5"/><ellipse cx="660" cy="420" rx="7" ry="3"/><ellipse cx="300" cy="452" rx="4" ry="2"/></g>';
+    o += flowers(opt.flowers || [[40, 350, '#ffffff'], [70, 362, '#f79ac0'], [250, 352, '#ffffff'], [560, 346, '#f79ac0'], [760, 352, '#ffffff'], [90, 488, '#f79ac0'], [430, 490, '#ffffff'], [720, 486, '#f79ac0']]);
+    return o;
+  }
+  function burst(x, y, r1, r2, n, fill) {
+    var pts = [];
+    for (var i = 0; i < n * 2; i++) {
+      var r = i % 2 ? r2 : r1, a = Math.PI * i / n - Math.PI / 2;
+      pts.push((x + Math.cos(a) * r).toFixed(1) + ',' + (y + Math.sin(a) * r * .78).toFixed(1));
+    }
+    return '<polygon points="' + pts.join(' ') + '" fill="' + fill + '" stroke="' + C.ink + '" stroke-width="3" stroke-linejoin="round"/>';
+  }
+  function sfx(x, y, idText, enText, size, color, rot) {
+    var tr = rot ? ' transform="rotate(' + rot + ' ' + x + ' ' + y + ')"' : '';
+    return '<g' + tr + '><text class="sfx t-id" x="' + x + '" y="' + y + '" text-anchor="middle" font-size="' + size + '" fill="' + color + '" stroke="#fff" stroke-width="6">' + idText + '</text>' +
+      '<text class="sfx t-en" x="' + x + '" y="' + (y + size * .78) + '" text-anchor="middle" font-size="' + Math.round(size * .55) + '" fill="#33597f" stroke="#fff" stroke-width="5">' + enText + '</text></g>';
+  }
+  function dust(x, y, s) {
+    return G(x, y, s, false, 0, '<g fill="#f3e3bf" stroke="#d6b273" stroke-width="2"><circle cx="0" cy="0" r="12"/><circle cx="16" cy="-6" r="9"/><circle cx="-14" cy="-4" r="8"/></g>');
+  }
+  function drops(list) {
+    return list.map(function (d) { return '<path d="M' + d[0] + ' ' + d[1] + ' q-4 6 0 8.5 q4 -2.5 0 -8.5Z" fill="' + C.water + '" stroke="#2f8ac0" stroke-width="1"/>'; }).join('');
+  }
+  function leaves(list) {
+    return list.map(function (l) {
+      return '<ellipse cx="' + l[0] + '" cy="' + l[1] + '" rx="8" ry="4" transform="rotate(' + l[3] + ' ' + l[0] + ' ' + l[1] + ')" fill="' + l[2] + '"/>';
+    }).join('');
+  }
+  var svg = function (body, vb, label) {
+    return '<svg viewBox="' + (vb || '0 0 800 500') + '" role="img" aria-label="' + label + '">' + body + '</svg>';
+  };
+
+  // ---------- scenes
+  var scenes = {
+    cover: function () {
+      return svg(bg({ trees: [[90, 360, 1], [730, 350, .9]], bushes: [[600, 360, .9]] }) +
+        rider({ x: 360, y: 444, s: 1.05, mood: 'joy' }) +
+        monyet({ x: 600, y: 376, s: 1, pose: 'cheer', mood: 'cheer' }) +
+        leaves([[520, 200, '#ef6a4c', 20], [560, 150, '#ffc93c', -30], [660, 190, '#5aaa62', 50], [700, 260, '#ef6a4c', -10], [480, 260, '#ffc93c', 70]]),
+        null, 'Ojan si Kancil naik sepeda, Vivi si Monyet bersorak');
+    },
+    castOjan: function () {
+      return svg('<rect width="240" height="240" fill="#ffe7b0"/><circle cx="120" cy="128" r="92" fill="#ffd77a"/>' + kancil({ x: 112, y: 160, s: .88, mood: 'happy' }), '0 0 240 240', 'Ojan si Kancil');
+    },
+    castVivi: function () {
+      return svg('<rect width="240" height="240" fill="#dcefd2"/><circle cx="120" cy="128" r="92" fill="#bfe1ad"/>' + monyet({ x: 124, y: 168, s: .95, pose: 'down', mood: 'happy' }), '0 0 240 240', 'Vivi si Monyet');
+    },
+    castGuru: function () {
+      return svg('<rect width="240" height="240" fill="#dfe6f7"/><circle cx="120" cy="128" r="92" fill="#c5d3f2"/>' + gajah({ x: 112, y: 182, s: .78, mood: 'smile', bucket: false }), '0 0 240 240', 'Bu Guru Gajah');
+    },
+    s1: function () {
+      return svg(bg({ trees: [[90, 360, 1], [720, 352, .95]], bushes: [[560, 362, .8], [250, 356, .6]] }) +
+        '<g class="wob">' + rider({ x: 390, y: 446, s: 1, rot: -4, mood: 'focus' }) + '</g>' +
+        line('M300 380 q-12 -12 0 -26 M286 388 q-18 -18 0 -40', C.ink, 3) +
+        line('M488 380 q12 -12 0 -26 M502 388 q18 -18 0 -40', C.ink, 3) +
+        sfx(560, 196, 'kayuh, kayuh!', 'push, push!', 34, '#e2463b', -8),
+        null, 'Ojan mengayuh sepeda yang bergoyang-goyang');
+    },
+    s2: function () {
+      return svg(bg({ trees: [[690, 372, 1.12, true]], bushes: [[80, 360, .8]] }) +
+        burst(200, 238, 92, 58, 11, '#ffd35a') +
+        sfx(200, 236, 'BRAK!', 'CRASH!', 50, '#e2463b', -6) +
+        sepeda({ x: 150, y: 452, s: .9, rot: -24 }) +
+        dust(250, 452, 1) + dust(390, 456, .8) +
+        kancil({ x: 310, y: 436, s: 1.05, pose: 'sit', mood: 'surprise', knee: 'red' }) +
+        monyet({ x: 600, y: 238, s: .95, branch: true, pose: 'point', mood: 'laugh', flip: true }) +
+        sfx(520, 112, 'Hihihi!', 'Hee-hee!', 32, '#8c5a38', 6),
+        null, 'Ojan jatuh dari sepeda, Vivi tertawa dari dahan pohon');
+    },
+    s3: function () {
+      return svg(bg({ trees: [[700, 372, 1.12, true]], bushes: [[60, 366, .9]] }) +
+        kancil({ x: 250, y: 440, s: 1.55, pose: 'sit', mood: 'hurt', knee: 'red' }) +
+        line('M352 300 q8 -6 0 -12 q-8 -6 0 -12 M372 306 q10 -8 0 -16 q-10 -8 0 -16', '#33597f', 3) +
+        monyet({ x: 610, y: 248, s: .9, branch: true, pose: 'point', mood: 'laugh', flip: true }) +
+        sfx(610, 118, 'hihi…', 'hee-hee…', 26, '#8c5a38', 6),
+        null, 'Ojan memegang lututnya yang sakit dan berkata jangan ketawa');
+    },
+    s4: function () {
+      return svg(bg({ trees: [[730, 366, 1.05]], bushes: [[70, 366, .8]] }) +
+        kancil({ x: 270, y: 440, s: 1.25, pose: 'sit', mood: 'sad', knee: 'red' }) +
+        monyet({ x: 500, y: 386, s: 1.15, pose: 'sorry', mood: 'sorry' }) +
+        leaves([[620, 210, '#5aaa62', 30], [585, 262, '#78c26e', -40]]),
+        null, 'Vivi meminta maaf kepada Ojan');
+    },
+    s5: function () {
+      return svg(bg({ trees: [[80, 360, .95]], bushes: [[720, 360, .9]] }) +
+        monyet({ x: 150, y: 386, s: .95, pose: 'sorry', mood: 'sorry' }) +
+        kancil({ x: 300, y: 438, s: 1.15, pose: 'sit', mood: 'happy', knee: 'red' }) +
+        gajah({ x: 520, y: 372, s: 1.25, flip: true, mood: 'smile', trunk: [132, 16], bucket: true }) +
+        drops([[347, 392], [338, 404], [352, 408], [330, 396]]) +
+        sfx(420, 214, 'byur…', 'splish…', 30, '#2f8ac0', 0),
+        null, 'Bu Guru Gajah membersihkan luka Ojan dengan air dari belalainya');
+    },
+    s6: function () {
+      var thought = '<g fill="#fff" stroke="' + C.ink + '" stroke-width="3"><circle cx="300" cy="196" r="7"/><circle cx="318" cy="168" r="11"/>' +
+        '<path d="M300 40 C330 8 400 14 410 40 C450 28 500 52 488 86 C512 104 494 146 456 140 C440 166 380 166 366 142 C326 156 292 132 304 104 C276 92 278 50 300 40Z"/></g>' +
+        '<circle cx="356" cy="90" r="24" fill="#ffd35a"/>' +
+        '<g stroke="#f2b632" stroke-width="4" stroke-linecap="round"><path d="M356 52 v-8 M356 128 v8 M318 90 h-8 M394 90 h8 M330 64 l-6 -6 M382 116 l6 6 M382 64 l6 -6 M330 116 l-6 6"/></g>' +
+        '<path d="M452 70 a26 26 0 1 0 18 40 a20 20 0 1 1 -18 -40Z" fill="#5a6fb8"/><circle cx="476" cy="70" r="2.5" fill="#ffd35a"/><circle cx="464" cy="120" r="2" fill="#ffd35a"/>' +
+        '<text class="sfx" x="412" y="100" text-anchor="middle" font-size="30" fill="' + C.ink + '">?</text>';
+      return svg(bg({ trees: [[60, 360, .9]], bushes: [[180, 362, .7]] }) +
+        gajah({ x: 730, y: 380, s: 1.05, flip: true, mood: 'warm', bucket: false }) +
+        monyet({ x: 620, y: 394, s: .85, pose: 'down', mood: 'happy', flip: true }) +
+        sepeda({ x: 470, y: 446, s: .95, stand: true }) +
+        kancil({ x: 260, y: 382, s: 1.05, pose: 'think', mood: 'think', knee: 'plaster' }) +
+        thought,
+        null, 'Ojan berpikir: coba lagi hari ini atau besok');
+    },
+    s7: function () {
+      var post = '<g transform="translate(700 410)"><rect x="-4" y="-110" width="8" height="112" fill="' + C.trunkD + '"/><path d="M4 -108 L52 -94 L4 -80Z" fill="#ef6a4c"/></g>';
+      var nums = [['1', 372, 300], ['2', 452, 270], ['3', 532, 240]].map(function (n) {
+        return '<circle cx="' + n[1] + '" cy="' + n[2] + '" r="26" fill="#fff" stroke="' + C.ink + '" stroke-width="3"/><text class="sfx" x="' + n[1] + '" y="' + (n[2] + 11) + '" text-anchor="middle" font-size="32" fill="#2f7d45">' + n[0] + '</text>';
+      }).join('') + '<path d="M300 330 Q340 312 346 306 M398 290 Q420 280 426 278 M478 258 Q498 250 506 248" fill="none" stroke="' + C.ink + '" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round"/>';
+      return svg(bg({ trees: [[80, 360, .95], [560, 350, .75]], bushes: [[300, 362, .7]] }) +
+        post +
+        rider({ x: 210, y: 452, s: .92, rot: -2, mood: 'focus', knee: 'plaster' }) +
+        line('M90 400 h-40 M100 420 h-56 M90 440 h-36', '#ffffff', 4) +
+        nums +
+        monyet({ x: 650, y: 368, s: 1.05, pose: 'call', mood: 'call', flip: true }) +
+        sfx(650, 196, 'Ayo, Ojan!', 'Come on, Ojan!', 30, '#2f7d45', 0),
+        null, 'Ojan mengayuh satu, dua, tiga kali; Vivi memanggil dari ujung jalan');
+    },
+    s8: function () {
+      var conf = leaves([[520, 120, '#ef6a4c', 20], [600, 90, '#ffc93c', -30], [690, 140, '#5aaa62', 50], [740, 210, '#ef6a4c', -10], [470, 200, '#5d82d6', 70], [560, 220, '#ffc93c', 10], [420, 120, '#f79ac0', -50], [650, 240, '#5d82d6', 30]]);
+      return svg(bg({ trees: [[300, 350, .7]], bushes: [[760, 362, .8]] }) +
+        gajah({ x: 110, y: 372, s: .95, pose: 'clap', mood: 'warm' }) +
+        rider({ x: 430, y: 448, s: .98, mood: 'joy', knee: 'plaster' }) +
+        line('M310 400 h-40 M318 420 h-52', '#ffffff', 4) +
+        monyet({ x: 660, y: 372, s: 1.08, pose: 'clap', mood: 'cheer', flip: true }) +
+        line('M626 284 l-12 -10 M624 302 l-16 0 M694 284 l12 -10 M696 302 l16 0', C.ink, 3) +
+        conf +
+        sfx(170, 120, 'Prok, prok!', 'Clap, clap!', 34, '#e2463b', -6) +
+        sfx(540, 62, 'Hore!', 'Hooray!', 40, '#2f7d45', 4),
+        null, 'Vivi bertepuk tangan dan bersorak saat Ojan berhasil');
+    }
+  };
+
+  document.querySelectorAll('[data-scene]').forEach(function (fig) {
+    var f = scenes[fig.getAttribute('data-scene')];
+    if (f) fig.innerHTML = f();
+  });
+
+  // ---------- language switch
+  var book = document.getElementById('book');
+  var btns = document.querySelectorAll('.seg button');
+  function setLang(l) {
+    book.setAttribute('data-lang', l);
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === l)); });
+    try { localStorage.setItem('ojan-lang', l); } catch (e) {}
+  }
+  btns.forEach(function (b) { b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); }); });
+  try { var saved = localStorage.getItem('ojan-lang'); if (saved) setLang(saved); } catch (e) {}
+})();
+</script>
+
+</html>
